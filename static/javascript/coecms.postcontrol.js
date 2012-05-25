@@ -1,0 +1,253 @@
+/**
+*  postcontrol give style and life to videotag messages
+*  depends :
+*  * underscore.js
+*  * ucewidget.js
+*  * jqueryUI
+*
+*  Copyright (C) 2011 CommOnEcoute,
+*  maintained by Elias Showk <elias.showk@gmail.com>
+*  source code at https://github.com/CommOnEcoute/ucengine-widgets
+*   
+*   postcontrol widget is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU Affero General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   postcontrol is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU Affero General Public License for more details.
+*
+*   You should have received a copy of the GNU Affero General Public License
+*   along with the source code.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+$.uce.PostControl = function(){};
+$.uce.PostControl.prototype = {
+    options: {
+        ucemeeting: null,
+        uceclient: null,
+        default_avatar_path: null,
+        avatar_media_url: null,
+        display_interval: 2000,
+        speakers : [],
+        postform: $('#form-comment').data('postform')
+    },
+
+    /*
+     * UCEngine events listening
+     */
+    meetingsEvents: {
+        "internal.roster.add"       :   "_handleJoin",
+        "internal.roster.delete"    :   "_handleLeave",
+        "videotag.message.dispatch" :   "_handleDispatchMessage",
+        "internal.user.disconnected":   "_handleReconnectUser"
+    },
+
+    /*
+     * UI initialize
+     */
+    _create: function() {
+        return;
+    },
+
+    /*
+     * Message element decorator
+     */
+    _handleDispatchMessage: function(event) {
+        var message = event.metadata.element;
+		var that = this;
+		var title = $(".block-header-left h1").text();
+        $("#toFacebook"+event.id).click(function(){
+            that.options.postform.toFacebook(event.metadata.text, event.metadata.currentTime, location.href, title);
+        });
+		/*socialsharing.append(
+			"<span class='ui-videotag-message-tw-sharing' evtid="+
+				event.id+"><a id='toTwitter"+event.id+
+                "' href=''><img src='/static/images/twitter_32.png'/></a></span>");*/
+        this._linkTextData(event);
+        // force user info displaying
+        this._updateMessage(event);
+        this._postDispatchTrigger(event);
+		
+		var twpublish = {
+			url: location.href + "?starttime=" + (Math.round(event.metadata.currentTime)).toString(),
+			via: "commonecoute",
+			text: ((title.length > 10) ? title.slice(0,10) + "..." : title)+" #LIVE "+((event.metadata.text.length > 82) ? event.metadata.text.slice(0,82) + "..." : event.metadata.text),
+			related: "commonecoute"
+		};
+		message.find("#toTwitter"+event.id).attr("href",  "https://twitter.com/intent/tweet?"+$.param(twpublish));
+    },
+
+    /*
+     * Text to links
+     */
+    _linkTextData: function(event) {
+        var spantext = event.metadata.element.find(".ui-videotag-message-text");        
+        // Change http URIs into links
+        var httpLinks = /(https?:\/\/[^ \)\"]+)/g;
+        spantext.html(spantext.html().replace(httpLinks, '<a href="$1" target="_BLANK">$1</a>'));
+        // TODO extract href
+        event.metadata.href = [];
+    },
+
+    /*
+     * internal event to notify message decoration is done
+     */
+    _postDispatchTrigger: function(event) {
+		event.type = "videotag.message.postdispatch";
+		this.options.ucemeeting.trigger(event);
+    },
+
+    /*
+     * Message's User Data displaying handler
+     */
+    _updateMessage: function(event) {
+        var user = this._state.users[event.from];
+        if(_.isBoolean(user)===true || user === undefined) {
+			return;
+        }
+        event.metadata.user = user;
+        this._updateMessageUser(event, user);
+        this._updateMessageGroup(event, user);
+        this._updateMessageUserAvatar(event, user);
+    },
+    /*
+     * injects User's name in every message
+     */
+    _updateMessageUser: function(event, user) {
+        var afrom = event.metadata.element.find(".ui-videotag-message-from[uid="+user.uid+"]");
+        if(afrom.length===0 || afrom.text()!=="") {
+            return;
+        }
+		this._appendUsername(afrom, user);
+    },
+    /*
+     * append username into a specific target afrom
+     */
+     _appendUsername: function(afrom, user) {
+        /*afrom.attr(
+            {'href':'/accounts/'+user.name, 'target': '_BLANK'});*/
+        afrom.text(this.getScreenName(user.uid));
+    },
+    /*
+     * inject Group's info in every Message
+     */
+    _updateMessageGroup: function(event, user) {
+		this._appendMessageGroup(event.metadata.element, user);
+    },
+	_appendMessageGroup: function(element, user) {
+        if(user.metadata===undefined || user.metadata.groups===undefined) {
+            return;
+        }
+        var groups = user.metadata.groups.split(",");
+		// user is me
+        if (user.uid == this.options.uceclient.uid){
+			element.addClass("ui-videotag-message-myPost");
+            return;
+        }
+        // producteur OR personality
+        if (_.include(this.options.speakers, user.uid)){
+            element.addClass("ui-videotag-message-personality");
+            return;
+        }
+	},
+    /*
+     * Injects User's avatar in every message
+     */
+    _updateMessageUserAvatar: function(event, user) {
+        var msg = event.metadata.element.find('.ui-videotag-message-avatar[uid='+user.uid+']:empty');
+        if (msg.length===0) { return; }
+		this._appendAvatar(msg, user);
+    },
+	_appendAvatar: function(msg, user) {
+		if (user.metadata && user.metadata.mugshot && user.metadata.mugshot !== "") {
+			msg.append(this.getMugshot(user.metadata.mugshot));
+		}
+		/*else if (user.metadata.email !== undefined) {
+			// TODO get a tiny Gravatar JS
+		}*/ 
+		else {
+			msg.append(this.getDefaultAvatar());
+		}
+	},
+    /*
+     * User Data displaying 
+	 * fired every time the User roster changes
+	 * updates every message posted by userid
+	 * (cf. ucewidget.js)
+     */
+    _updateRoster: function(userid) {
+        var user = this._state.users[userid];
+        if (_.isObject(user)!==true){
+            //console.warn("user is not an object");
+            return;
+        }
+        this._updateUser(user);
+        this._updateGroup(user);
+        this._updateUserAvatar(user);
+        var event = user;
+        event.type = "internal.user.received";
+        this.options.ucemeeting.trigger(event);
+    },
+    /*
+     * injects User's name in every message
+     */
+    _updateUser: function(user) {
+        var afrom = this.element.find(".ui-videotag-message-from[uid="+user.uid+"]");
+        if(afrom.length===0 || afrom.text()!=="") {
+            return;
+        }
+		this._appendUsername(afrom, user);
+    },
+    /*
+     * inject Group's info in every Message
+     */
+    _updateGroup: function(user) {
+		var afrom = this.element.find(".ui-videotag-message-from[uid="+user.uid+"]").parents(".ui-videotag-message");
+        if(afrom.length===0) {
+            return;
+        }
+		this._appendMessageGroup(afrom, user);
+    },
+    /*
+     * Injects User's avatar in every message
+     */
+    _updateUserAvatar: function(user) {
+        var that = this;
+        this.element.find('.ui-videotag-message-avatar[uid='+user.uid+']:empty').each(function() {
+			that._appendAvatar($(this), user);
+        });
+    },
+    /*
+    * gets default avatar
+    */ 
+    getDefaultAvatar: function() {
+        return $("<img>").attr('src', this.options.default_avatar_path);
+    },
+    /*
+    * gets profile's avatar
+    */ 
+    getMugshot:function(path) {
+        return $("<img>").attr('src', this.options.avatar_media_url + path);
+    },
+
+    destroy: function() {
+        $.Widget.prototype.destroy.apply(this, arguments); // default destroy
+    },
+
+    /*
+     * Sign in popup fired when the internal disconnection event is fired
+     */
+    _handleReconnectUser: function(event) {
+        var _height = (Math.ceil($('#pre-footer').offset().top) - 150);
+        $('#signin-popup-overlay').css({
+            'height': _height,
+            'display': 'block'
+        }); 
+        $('#signin-popup').show();
+	}
+
+};
+$.uce.widget("postcontrol", new $.uce.PostControl());
