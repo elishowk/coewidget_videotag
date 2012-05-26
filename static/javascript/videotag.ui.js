@@ -144,6 +144,7 @@ $.uce.Videotag.prototype = {
             });
             return;
         }
+        this.element.find('.videoticker-comment-share[data-event="'+event.metadata.parent+'"]').remove();
         this.element.find('.ui-videotag-message[evtid="'+event.metadata.parent+'"]').remove();
         this.element.removeData(event.metadata.parent);
     },
@@ -294,7 +295,7 @@ $.uce.Videotag.prototype = {
         msgheader += "<div class='ui-videotag-message-header videoticker-comment-user'>";
         msgheader += "<img uid='"+event.from+"' class='ui-videotag-message-avatar avatar'></img>";
         msgheader += "<div class='videoticker-comment-like-wrapper'>"+
-            "<a href='javascript:void(0);' class='ui-videotag-message-vote'>"+votes+"</a>"+
+            "<a href='javascript:void(0);' class='ui-videotag-message-vote videoticker-comment-like'>"+votes+"</a>"+
             "</div>";
 		msgheader += "</div>";
         msgtext += "<div class='videoticker-comment-text'>";
@@ -332,7 +333,7 @@ $.uce.Videotag.prototype = {
 
     },
     _appendShareDiv: function(event) {
-        return '<div class="videoticker-comment-share">'+
+        return '<div data-event="'+event.id+'" class="videoticker-comment-share">'+
             '<div>'+
                 '<p>Partager sur '+
                 '<a id="toTwitter"'+event.id+' href="#" class="videoticker-comment-share-twitter">twitter</a> '+
