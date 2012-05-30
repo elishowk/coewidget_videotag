@@ -36,42 +36,47 @@ $.uce.PostForm.prototype = {
     _initPostForm: function() {
         var that = this;
         var text = $('#timeline-user-comment');
+        var $btnReset   = $(".close-comment-box");
+        var $placehoder = $('div.form-comment-fake-input-placeholder');
         var _outside = function(_e) {
             var _clicked = $(_e.target);
-	    var textinput = $('#timeline-user-comment');
-            if(_clicked.attr("id") !== 'timeline-user-comment' && !_clicked.hasClass('.ui-postform-submit') && textinput.val()==="") {
-		_closeForm();
-	    }
-	};
+            if(_clicked.attr("id") !== 'timeline-user-comment' && !_clicked.hasClass('.ui-postform-submit') && text.val()==="") {
+                _closeForm();
+            }
+        };
         var _closeForm = function(event) {
-	    $(document).unbind('click', _outside);
+            $(document).unbind('click', _outside);
             text.blur();
             that._startClock(); 
             text.val("");
             $(".ui-postform-input-numChar").text("300");
-	    $(".close-comment-box").hide();
+            $btnReset.hide();
+            $placehoder.show();
         };
         var _openForm = function(event) {
-		if (getUsername()=="anonymous"){
-			$("#signin-popup").show();
-			$("#signin-popup-overlay").show();
-			$("#identification").trigger("click");
-			$("#non-signin-alert").show();
-			$('#non-signin-alert').fadeOut(4000, function() {
-		});
-		    return;
-		}
+            if (getUsername()=="anonymous"){
+                $("#signin-popup").show();
+                $("#signin-popup-overlay").show();
+                $("#identification").trigger("click");
+                $("#non-signin-alert").show();
+                $('#non-signin-alert').fadeOut(4000, function() {});
+                return;
+            }
+            $placehoder.hide();
+            $btnReset.show();
             that._stopClock();
             var ct = that.options.player.uceplayer('getCurrentTime').toString();
             $('input.ui-postform-currenttime').val(ct);
-			$(".close-comment-box").show();
 			$(document).bind('click', _outside);
         };
         text.focus(function(evtObj){
             _openForm();
         });
+        $btnReset.click(function() {
+            _closeForm();
+        });
         $(".ui-postform-submit").click(function(){
-            textinput = $('#timeline-user-comment').val().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            textinput = text.val().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
             if(textinput==="") {
                 _closeForm();
                 return false;
@@ -100,22 +105,19 @@ $.uce.PostForm.prototype = {
             _closeForm();
             return false;
         });
-        $(".close-comment-box").click(function() {
-            _closeForm();
-        });
         /*
         * Message Input callbacks
         */
         text.keyup(function(event) {
             var numCharField = $(".ui-postform-input-numChar");
             
-            if ($("#timeline-user-comment").val().length < 300){
+            if ($(this).val().length < 300){
                 numCharField.css({"color":"#3B3B3B"});
             }
             else{
                 numCharField.css({"color":"#9c100c"});
             }
-            numCharField.text((300 - text.val().length).toString());
+            numCharField.text((300 - $(this).val().length).toString());
             // Manage ESC key press : toogle slide back to hidden & empty form
             if ( event.keyCode == 27 ) {
                 _closeForm();
@@ -136,7 +138,7 @@ $.uce.PostForm.prototype = {
             $('body').append(
                 $('<a id="'+ancid+'" href="https://twitter.com/intent/tweet?"></a>'));
         } else if ($("#"+ancid).attr("href")!="https://twitter.com/intent/tweet?") {
-        $("#"+ancid).attr("href", "https://twitter.com/intent/tweet?");
+            $("#"+ancid).attr("href", "https://twitter.com/intent/tweet?");
         }
     },
     /*
@@ -194,9 +196,10 @@ $.uce.PostForm.prototype = {
         }
 	},
 	toTwitter: function(ancid, text, currentTime, href, title){
+        var twpublish = {};
 		if(window.twttr !== undefined) {
             this._initTwitterIntents(ancid);
-            var twpublish = {
+            twpublish = {
                 url: href + "?starttime=" + (Math.round(currentTime)).toString(),
                 via: "commonecoute",
                 text: ((title.length > 10) ? title.slice(0,10) + "..." : title) + " #LIVE " + ((text.length > 82) ? text.slice(0,82) + "..." : text ),
@@ -273,24 +276,6 @@ $.uce.PostForm.prototype = {
 		}
         this.element.find('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
-    },
-	
-	setSize: function(w,ratio) {
-		this.element.width(w-27);
-		this.element.find('.ui-videotag-input').width(485*ratio);
-		this.element.find('.ui-postform-submit').width(80*ratio);
-		this.element.find('.service_icon').width(32*ratio);
-		
-		if (getPageboxWidth() <= 930){
-			this.element.find('.space-for-icons').css('font-size',14*ratio*0.1+'px');
-			this.element.find('.ui-postform-time').css('font-size',30*ratio*1.1+'px');
-		}
-		else {
-			this.element.find('.space-for-icons').css('font-size',14*ratio*0.9+'px');
-			this.element.find('.ui-postform-time').css('font-size',30*ratio+'px');
-		}
-		var closetextwidth = this.element.find('.ui-postform-time').width() + this.element.find('.ui-videotag-input').width() + 36;
-		this.element.find('.close-comment-box').css('left',closetextwidth+'px');
     }
 
 };
