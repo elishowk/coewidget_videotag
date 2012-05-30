@@ -5,7 +5,7 @@ register = template.Library()
 
 @register.inclusion_tag('videotag/videotag.html')
 def videotagwidget(id, classes):
-    return { 'id': id, 'class': classes }
+    return { 'id': id, 'classes': classes }
 
 @register.inclusion_tag('videotag/postform.html')
 def videotagpostform(id):
