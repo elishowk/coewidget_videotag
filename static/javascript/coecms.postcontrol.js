@@ -57,31 +57,27 @@ $.uce.PostControl.prototype = {
      */
     _handleDispatchMessage: function(event) {
         var message = event.metadata.element;
-		var that = this;
-		var title = $(".block-header-left h1").text();
-        $("#toFacebook"+event.id).click(function(){
+        var that = this;
+        var title = $(".block-header-left h1").text();
+        $("#toFacebook"+event.id).live("click", function(){
             that.options.postform.toFacebook(event.metadata.text, event.metadata.currentTime, location.href, title);
         });
-		/*socialsharing.append(
-			"<span class='ui-videotag-message-tw-sharing' evtid="+
-				event.id+"><a id='toTwitter"+event.id+
-                "' href=''><img src='/static/images/twitter_32.png'/></a></span>");*/
+        var twpublish = {
+            url: location.href + "?starttime=" + (Math.round(event.metadata.currentTime)).toString(),
+            via: "commonecoute",
+            text: ((title.length > 10) ? title.slice(0,10) + "..." : title)+" #LIVE "+((event.metadata.text.length > 82) ? event.metadata.text.slice(0,82) + "..." : event.metadata.text),
+            related: "commonecoute"
+        };
+        message.find("#toTwitter"+event.id).attr("href",  "https://twitter.com/intent/tweet?"+$.param(twpublish));
         this._linkTextData(event);
         // force user info displaying
         this._updateMessage(event);
         this._postDispatchTrigger(event);
-		
-		var twpublish = {
-			url: location.href + "?starttime=" + (Math.round(event.metadata.currentTime)).toString(),
-			via: "commonecoute",
-			text: ((title.length > 10) ? title.slice(0,10) + "..." : title)+" #LIVE "+((event.metadata.text.length > 82) ? event.metadata.text.slice(0,82) + "..." : event.metadata.text),
-			related: "commonecoute"
-		};
-		message.find("#toTwitter"+event.id).attr("href",  "https://twitter.com/intent/tweet?"+$.param(twpublish));
     },
 
     /*
      * Text to links
+     * TODO use twitter text js
      */
     _linkTextData: function(event) {
         var spantext = event.metadata.element.find(".ui-videotag-message-text");        
@@ -96,8 +92,8 @@ $.uce.PostControl.prototype = {
      * internal event to notify message decoration is done
      */
     _postDispatchTrigger: function(event) {
-		event.type = "videotag.message.postdispatch";
-		this.options.ucemeeting.trigger(event);
+        event.type = "videotag.message.postdispatch";
+        this.options.ucemeeting.trigger(event);
     },
 
     /*
@@ -106,7 +102,7 @@ $.uce.PostControl.prototype = {
     _updateMessage: function(event) {
         var user = this._state.users[event.from];
         if(_.isBoolean(user)===true || user === undefined) {
-			return;
+            return;
         }
         event.metadata.user = user;
         this._updateMessageUser(event, user);
@@ -121,10 +117,11 @@ $.uce.PostControl.prototype = {
         if(afrom.length===0 || afrom.text()!=="") {
             return;
         }
-		this._appendUsername(afrom, user);
+        this._appendUsername(afrom, user);
     },
     /*
      * append username into a specific target afrom
+     * TODO link user profile
      */
      _appendUsername: function(afrom, user) {
         /*afrom.attr(
@@ -135,16 +132,16 @@ $.uce.PostControl.prototype = {
      * inject Group's info in every Message
      */
     _updateMessageGroup: function(event, user) {
-		this._appendMessageGroup(event.metadata.element, user);
+        this._appendMessageGroup(event.metadata.element, user);
     },
-	_appendMessageGroup: function(element, user) {
+    _appendMessageGroup: function(element, user) {
         if(user.metadata===undefined || user.metadata.groups===undefined) {
             return;
         }
         var groups = user.metadata.groups.split(",");
-		// user is me
+        // user is me
         if (user.uid == this.options.uceclient.uid){
-			element.addClass("ui-videotag-message-myPost");
+            element.addClass("ui-videotag-message-myself");
             return;
         }
         // producteur OR personality
@@ -152,31 +149,34 @@ $.uce.PostControl.prototype = {
             element.addClass("ui-videotag-message-personality");
             return;
         }
-	},
+    },
     /*
      * Injects User's avatar in every message
      */
     _updateMessageUserAvatar: function(event, user) {
-        var msg = event.metadata.element.find('.ui-videotag-message-avatar[uid='+user.uid+']:empty');
-        if (msg.length===0) { return; }
-		this._appendAvatar(msg, user);
+        var msgav = event.metadata.element.find('.ui-videotag-message-avatar[uid='+user.uid+']');
+        if (msgav.attr("src")!==undefined || msgav.attr("src")!=="") { return; }
+        this._appendAvatar(msg, user);
     },
-	_appendAvatar: function(msg, user) {
-		if (user.metadata && user.metadata.mugshot && user.metadata.mugshot !== "") {
-			msg.append(this.getMugshot(user.metadata.mugshot));
-		}
-		/*else if (user.metadata.email !== undefined) {
-			// TODO get a tiny Gravatar JS
-		}*/ 
-		else {
-			msg.append(this.getDefaultAvatar());
-		}
-	},
+    /*
+     * FIXME Only gets default avatar now
+     */
+    _appendAvatar: function(msg, user) {
+        if (user.metadata && user.metadata.mugshot && user.metadata.mugshot !== "") {
+            msg.find(".ui-videotag-message-avatar").attr("src", this.getMugshot(user.metadata.mugshot));
+        }
+        /*else if (user.metadata.email !== undefined) {
+            // TODO use getUserAvatar with gravatar
+        }*/ 
+        else {
+            msg.find(".ui-videotag-message-avatar").attr("src", this.getDefaultAvatar());
+        }
+    },
     /*
      * User Data displaying 
-	 * fired every time the User roster changes
-	 * updates every message posted by userid
-	 * (cf. ucewidget.js)
+     * fired every time the User roster changes
+     * updates every message posted by userid
+     * (cf. ucewidget.js)
      */
     _updateRoster: function(userid) {
         var user = this._state.users[userid];
@@ -199,46 +199,47 @@ $.uce.PostControl.prototype = {
         if(afrom.length===0 || afrom.text()!=="") {
             return;
         }
-		this._appendUsername(afrom, user);
+        this._appendUsername(afrom, user);
     },
     /*
      * inject Group's info in every Message
      */
     _updateGroup: function(user) {
-		var afrom = this.element.find(".ui-videotag-message-from[uid="+user.uid+"]").parents(".ui-videotag-message");
+        var afrom = this.element.find(".ui-videotag-message-from[uid="+user.uid+"]").parents(".ui-videotag-message");
         if(afrom.length===0) {
             return;
         }
-		this._appendMessageGroup(afrom, user);
+        this._appendMessageGroup(afrom, user);
     },
     /*
      * Injects User's avatar in every message
      */
     _updateUserAvatar: function(user) {
         var that = this;
-        this.element.find('.ui-videotag-message-avatar[uid='+user.uid+']:empty').each(function() {
-			that._appendAvatar($(this), user);
+        this.element.find('.ui-videotag-message-avatar[uid='+user.uid+']').each(function() {
+            if($(this).attr('src')==="" || $(this).attr('src')===undefined) {
+                that._appendAvatar($(this), user);
+            }
         });
     },
     /*
-    * gets default avatar
-    */ 
+     * gets default avatar
+     */ 
     getDefaultAvatar: function() {
-        return $("<img>").attr('src', this.options.default_avatar_path);
+        return this.options.default_avatar_path;
     },
     /*
-    * gets profile's avatar
-    */ 
+     * TODO user md5 to get gravatar
+     * gets profile's avatar
+     */ 
     getMugshot:function(path) {
-        return $("<img>").attr('src', this.options.avatar_media_url + path);
+        return this.options.avatar_media_url + path;
     },
-
     destroy: function() {
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
     },
-
     /*
-     * Sign in popup fired when the internal disconnection event is fired
+     * Sign-in popup opened when the internal disconnection event is fired
      */
     _handleReconnectUser: function(event) {
         var _height = (Math.ceil($('#pre-footer').offset().top) - 150);
@@ -247,7 +248,7 @@ $.uce.PostControl.prototype = {
             'display': 'block'
         }); 
         $('#signin-popup').show();
-	}
+    }
 
 };
 $.uce.widget("postcontrol", new $.uce.PostControl());
