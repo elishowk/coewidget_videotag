@@ -27,6 +27,8 @@ $.uce.PostForm.prototype = {
      * UI initialize
      */
     _create: function() {
+        $(".timeline_service_icons > .service_icon").click(
+            function(){ $(this).toggleClass('dim'); });
         this._initPostForm();
         this._startClock();
     },
@@ -87,7 +89,7 @@ $.uce.PostForm.prototype = {
                 return false;
             }
             var metadata = {
-                title: $('head > title').text(),
+                title: $('.ui-postform-title').text(),
                 isLive: that.options.isLive.toString(),
                 href: location.href,
                 text: textinput, 
@@ -147,13 +149,13 @@ $.uce.PostForm.prototype = {
      *
      */
     sharePost: function(metadata) {
-        var toFacebook = ($('.timeline_service_icons > #facebook').hasClass('dim') === false);
-        var toTwitter = ($('.timeline_service_icons > #twitter').hasClass('dim') === false);
+        var toFacebook = (this.element.children('#facebook').hasClass('dim') === false);
+        var toTwitter = (this.element.children('#twitter').hasClass('dim') === false);
         if(toFacebook===true) {
 			this.toFacebook(metadata.text, metadata.currentTime, metadata.href, metadata.title);
         }
         if(toTwitter===true) {
-			var title = $(".block-header-left h1").text();
+			var title = $(".ui-postform-title").text();
             var twpublish = this.toTwitter("twitter-intents-a", metadata.text, metadata.currentTime, metadata.href, title);
             window.open( $("#twitter-intents-a").attr("href"),
 				"intents",
@@ -215,7 +217,6 @@ $.uce.PostForm.prototype = {
      * Start the clock synchronised on player time
      */
     _startClock: function() {
-        this.options.clockContainer.removeClass("ui-postform-time-highlight");
 		var that=this;
 		this._clockLoop = window.setInterval(function(){
             that._displayClock();
