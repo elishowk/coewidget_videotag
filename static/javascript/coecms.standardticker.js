@@ -86,7 +86,7 @@ $.uce.StandardTicker.prototype = {
             return;
         }
         currentmessages = this.element.find(".ui-videotag-message[currenttime="+currenttime.toString()+"]");
-        this._currentMessageAnc = currentmessages.first();
+        this._currentMessageAnc = currentmessages.last();
         if(this._currentMessageAnc !== undefined && this._currentMessageAnc.length == 1) {
             this.element.scrollTo(this._currentMessageAnc,
                 this._getScrollParams(settings, this._currentMessageAnc, currentmessages)); 
