@@ -61,11 +61,11 @@ $.uce.StandardTicker.prototype = {
         this._updateLoop = null;
 		this.playTicker();
         var that = this;
-        this.element.mouseenter(function() {
+        this.element.parent().mouseenter(function() {
 		    that.pauseTicker();
             that.options.mouseover = true; 
         });
-        this.element.mouseleave(function() {
+        this.element.parent().mouseleave(function() {
             that.playTicker();
             that.options.mouseover = false;
         });
