@@ -56,11 +56,10 @@ $.uce.PostControl.prototype = {
      * Message element decorator
      */
     _handleDispatchMessage: function(event) {
-        var message = event.metadata.element;
         var that = this;
         var title = $(".ui-postform-title").text();
         $("#ui-videotag-message-share-facebook-"+event.id).click(function(evt){
-            that.options.postform.toFacebook(event.metadata.text, event.metadata.currentTime, location.href, title);
+            $('#form-comment').data('postform').toFacebook(event.metadata.text, event.metadata.currentTime, location.href, title);
         });
         var twpublish = {
             url: location.href + "?starttime=" + (Math.round(event.metadata.currentTime)).toString(),
