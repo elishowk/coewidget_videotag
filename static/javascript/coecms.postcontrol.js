@@ -58,17 +58,17 @@ $.uce.PostControl.prototype = {
     _handleDispatchMessage: function(event) {
         var message = event.metadata.element;
         var that = this;
-        var title = $(".block-header-left h1").text();
-        $("#toFacebook"+event.id).live("click", function(){
+        var title = $(".ui-postform-title").text();
+        $("#ui-videotag-message-share-facebook-"+event.id).click(function(evt){
             that.options.postform.toFacebook(event.metadata.text, event.metadata.currentTime, location.href, title);
         });
         var twpublish = {
             url: location.href + "?starttime=" + (Math.round(event.metadata.currentTime)).toString(),
             via: "commonecoute",
-            text: ((title.length > 10) ? title.slice(0,10) + "..." : title)+" #LIVE "+((event.metadata.text.length > 82) ? event.metadata.text.slice(0,82) + "..." : event.metadata.text),
+            text: ((event.metadata.text.length > 72) ? event.metadata.text.slice(0,72) + "..." : event.metadata.text)+" from "+((title.length > 30) ? title.slice(0,30) + "..." : title),
             related: "commonecoute"
         };
-        message.find("#toTwitter"+event.id).attr("href",  "https://twitter.com/intent/tweet?"+$.param(twpublish));
+        $("#ui-videotag-message-share-twitter-"+event.id).attr("href",  "https://twitter.com/intent/tweet?"+$.param(twpublish));
         this._linkTextData(event);
         // force user info displaying
         this._updateMessage(event);

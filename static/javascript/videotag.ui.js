@@ -336,8 +336,8 @@ $.uce.Videotag.prototype = {
         return '<div data-event="'+event.id+'" class="videoticker-comment-share">'+
             '<div>'+
                 '<p>Partager sur '+
-                '<a id="ui-videotag-message-share-twitter"'+event.id+' href="#" class="videoticker-comment-share-twitter">twitter</a> '+
-                '<a id="ui-videotag-message-share-facebook"'+event.id+' href="#" class="videoticker-comment-share-facebook">facebook</a>'+
+                '<a id="ui-videotag-message-share-twitter-'+event.id+'" href="javascript:void(0)" class="videoticker-comment-share-twitter">twitter</a> '+
+                '<a id="ui-videotag-message-share-facebook-'+event.id+'" href="javascript:void(0)" class="videoticker-comment-share-facebook">facebook</a>'+
                 '</p>'+
                 '<span class="videoticker-comment-share-close">close</span>'+
             '</div>'+
@@ -355,9 +355,9 @@ $.uce.Videotag.prototype = {
 		}
 		var event = data[0];
 		var message = data[1];
-		this._dispatchMessage(event, message);
 		if(this.element.find(".ui-videotag-message").length === 0) {
             this.element.append(message.after(this._appendShareDiv(event)));
+            this._dispatchMessage(event, message);
             return;
         }
         var that = this;
@@ -371,6 +371,7 @@ $.uce.Videotag.prototype = {
                 return false;
             }
         });
+		this._dispatchMessage(event, message);
     },
     /*
      * Attach click events on the message
