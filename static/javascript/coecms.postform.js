@@ -100,7 +100,7 @@ $.uce.PostForm.prototype = {
             var hashtagMatch =  metadata.text.match( that.options.hashtagPattern );
             if ( _.isArray(hashtagMatch) ) {
                 metadata.hashtag = _.map( _.uniq( hashtagMatch ),
-                    function(tag) { return tag.trim().toUpperCase(); });
+                    function(tag) { return tag.trim().toLowerCase(); });
             }
             that.options.videotag.data("videotag").postNewMessage(metadata);
             that.sharePost(metadata);
