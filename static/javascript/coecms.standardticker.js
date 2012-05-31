@@ -56,7 +56,7 @@ $.uce.StandardTicker.prototype = {
      * UI initialize
      */
     _create: function() {
-        this.element.scrollTo(0, 0);
+        this.element.scrollTo("100%", 0);
         this.options.mouseover = false;
         this._updateLoop = null;
 		this.playTicker();
@@ -71,7 +71,7 @@ $.uce.StandardTicker.prototype = {
         });
     },
     /* 
-     * Public method to control scrolling from outside the widget
+     * Public method to control manual scrolling
      */
     scrollToCurrentTime: function(currenttime) {
         this._scrollToCurrentTime(currenttime, this.options.manualScrollSettings);                     
@@ -85,24 +85,25 @@ $.uce.StandardTicker.prototype = {
         if (typeof currenttime !== "number") {
             return;
         }
-        messages = this.element.find(".ui-videotag-message[currenttime="+currenttime.toString()+"]");
-        this._currentMessageAnc = messages.last();
+        currentmessages = this.element.find(".ui-videotag-message[currenttime="+currenttime.toString()+"]");
+        this._currentMessageAnc = currentmessages.first();
         if(this._currentMessageAnc !== undefined && this._currentMessageAnc.length == 1) {
             this.element.scrollTo(this._currentMessageAnc,
-                this._getScrollParams(settings, this._currentMessageAnc, messages)); 
+                this._getScrollParams(settings, this._currentMessageAnc, currentmessages)); 
         } else {
-            var maximum = this.element.find(".ui-videotag-message").first();
-            if (maximum.length==0) {
+            var messages = this.element.find(".ui-videotag-message");
+            var maximum = messages.last();
+            if (maximum.length===0) {
                return;
             }
-            var previousMessages = this.element.children(".ui-videotag-message").filter(function(){
-                return (parseInt($(this).attr("currenttime"), 10) <= currenttime);
-            }).each(function(){
-                maximum = (parseInt($(this).attr("currenttime"), 10) > parseInt(maximum.attr("currenttime"), 10)) ? $(this) : maximum;
-            });
-            if(parseInt(maximum.attr("currenttime"), 10) != parseInt(this._currentMessageAnc.attr("currenttime"), 10)) {
-            this.element.scrollTo(maximum,
-                this._getScrollParams(settings, maximum, maximum)); 
+            var previousMessages = $(messages.filter(function(){
+                    return ($(this).data("currenttime") <= currenttime);
+                }).get().reverse() ).each(function(){
+                    maximum = ($(this).data("currenttime") > maximum.attr("currenttime")) ? $(this) : maximum;
+                });
+            if(maximum.data("currenttime") != this._currentMessageAnc.data("currenttime")) {
+                this.element.scrollTo(maximum,
+                    this._getScrollParams(settings, maximum, maximum)); 
             }
         }
     },
@@ -111,7 +112,7 @@ $.uce.StandardTicker.prototype = {
      */
     _getScrollParams: function(baseSettings, element, messages){
         var that = this;
-        var offset = {};
+        /*var offset = {};
         if (element.length==1){
             offset = { offset : {
                 top: -this.element.height() +
@@ -121,7 +122,7 @@ $.uce.StandardTicker.prototype = {
                 parseInt(this.element.css("paddingBottom"), 10) +
                 parseInt(element.css("paddingBottom"), 10)
             }};
-        }
+        }*/
         var step = {};
         if (messages.length > 0){
             step = { step: function(now, fx) {
@@ -129,7 +130,7 @@ $.uce.StandardTicker.prototype = {
                 messages.addClass("ui-videotag-message-current");
             }};
         }
-        return $.extend({}, baseSettings, offset, step);
+        return $.extend({}, baseSettings, step);
     },
     /* 
      * Event Handler and public method
@@ -177,7 +178,6 @@ $.uce.StandardTicker.prototype = {
         this.lastCurrentTime=currentTime;
         this._scrollToCurrentTime(currentTime, this.options.autoScrollSettings);
     },
-
 	_setOption: function(key, value) {
 		$.Widget.prototype._setOption.apply(this, arguments);
 	},

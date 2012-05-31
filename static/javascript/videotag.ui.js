@@ -347,6 +347,8 @@ $.uce.Videotag.prototype = {
      * Inject the message in the chronological order
      */
     _positionMessage: function() {
+        // TODO never more than one element into the queue
+        // add support for multiple injection at one time
 		var data = this._injectQueue.pop();
 		if(data===undefined) {
 			return;
@@ -354,26 +356,22 @@ $.uce.Videotag.prototype = {
 		var event = data[0];
 		var message = data[1];
 		this._dispatchMessage(event, message);
-		if(this.element.find('.ui-videotag-message').length === 0) {
-            this.element.prepend(message.after(this._appendShareDiv(event)));
-            return;
-        }
-        var insertIndex = _.sortedIndex(
-            _.toArray(this.element.find('.ui-videotag-message')),
-            message,
-            function(elt){
-                return Math.round($(elt).data('currenttime')); });
-        
-        if(insertIndex===0) {
-            this.element.prepend(message.after(this._appendShareDiv(event)));
-            return;
-        }
-        var prevElt = this.element.find(".ui-videotag-message:eq("+insertIndex+")");
-        if(prevElt.length===0) {
+        var messages = this.element.find('.ui-videotag-message');
+		if(messages.length === 0) {
             this.element.append(message.after(this._appendShareDiv(event)));
             return;
         }
-        prevElt.before(message.after(this._appendShareDiv(event)));
+        var that = this;
+        messages.each(function(i){
+            if(i==messages.length-1) {
+                messages.append(message.after(that._appendShareDiv(event)));
+                return false;
+            }
+            if ($(this).data('currenttime') <= message.data('currenttime')) {
+                $(this).before(message.after(that._appendShareDiv(event)));
+                return false;
+            }
+        });
     },
     /*
      * Attach click events on the message
@@ -395,7 +393,7 @@ $.uce.Videotag.prototype = {
         if (event.from != this.options.uceclient.uid && _.include(data.metadata.votes, this.options.uceclient.uid)===false ) {
             this._attachVote(evid, message);
         }
-        message.data('currenttime', event.metadata.currentTime);
+        message.data('currenttime', Number(event.metadata.currentTime));
     },
 
     /*
