@@ -158,8 +158,8 @@ $.uce.Videotag.prototype = {
     /*
      * Event sender
      * Public method posting a new message
-	 * send 1000 messages with the current session
-	 * for(var i=0; i<1000; i++){ $("#videoticker").data('videotag').postNewMessage({text: "benchmark", currentTime: Math.random() * 120}, function(){}); }
+	 * send 100 deep-tags with the current session
+	 * for(var i=0; i<100; i++){ $("#videoticker").data('videotag').postNewMessage({text: "benchmark", currentTime: Math.round(Math.random() * 120)}, function(){}); }
      */
     postNewMessage: function(metadata, successcallback) {
         var it = this;
@@ -336,8 +336,8 @@ $.uce.Videotag.prototype = {
         return '<div data-event="'+event.id+'" class="videoticker-comment-share">'+
             '<div>'+
                 '<p>Partager sur '+
-                '<a id="toTwitter"'+event.id+' href="#" class="videoticker-comment-share-twitter">twitter</a> '+
-                '<a id="toFacebook"'+event.id+' href="#" class="videoticker-comment-share-facebook">facebook</a>'+
+                '<a id="ui-videotag-message-share-twitter"'+event.id+' href="#" class="videoticker-comment-share-twitter">twitter</a> '+
+                '<a id="ui-videotag-message-share-facebook"'+event.id+' href="#" class="videoticker-comment-share-facebook">facebook</a>'+
                 '</p>'+
                 '<span class="videoticker-comment-share-close">close</span>'+
             '</div>'+
@@ -356,15 +356,14 @@ $.uce.Videotag.prototype = {
 		var event = data[0];
 		var message = data[1];
 		this._dispatchMessage(event, message);
-        var messages = this.element.find('.ui-videotag-message');
-		if(messages.length === 0) {
+		if(this.element.find(".ui-videotag-message").length === 0) {
             this.element.append(message.after(this._appendShareDiv(event)));
             return;
         }
         var that = this;
-        messages.each(function(i){
-            if(i==messages.length-1) {
-                messages.append(message.after(that._appendShareDiv(event)));
+        this.element.find('.ui-videotag-message').each(function(i){
+            if(i==that.element.find(".ui-videotag-message").length-1) {
+                that.element.append(message.after(that._appendShareDiv(event)));
                 return false;
             }
             if ($(this).data('currenttime') <= message.data('currenttime')) {
