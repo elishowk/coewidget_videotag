@@ -32,15 +32,15 @@ $.uce.PostControl.prototype = {
         avatar_media_url: null,
         display_interval: 2000,
         speakers : [],
-        postform: $('#form-comment').data('postform')
+        postform: $('#form-comment').data('postform'),
+        roster: $('#roster').data('roster')
     },
 
     /*
      * UCEngine events listening
      */
     meetingsEvents: {
-        "internal.roster.add"       :   "_handleJoin",
-        "internal.roster.delete"    :   "_handleLeave",
+        "internal.roster.update"    :   "_updateRoster",
         "videotag.message.dispatch" :   "_handleDispatchMessage",
         "internal.user.disconnected":   "_handleReconnectUser"
     },
@@ -73,6 +73,26 @@ $.uce.PostControl.prototype = {
         this._updateMessage(event);
         this._postDispatchTrigger(event);
     },
+    /*
+     * User Data displaying 
+	 * fired every time the User roster changes
+	 * updates every message posted by userid
+     */
+    _updateRoster: function(event) {
+        var users = this.options.roster.getUsersState();
+        if (_.isObject(users)!==true){
+            return;
+        }
+        var user = users[event.from];
+        if(_.isBoolean(user)===true || user === undefined) {
+			return;
+        }
+        this._updateUser(user);
+        this._updateGroup(user);
+        this._updateUserAvatar(user);
+        user.type = "internal.user.received";
+        this.options.ucemeeting.trigger(user);
+    },
 
     /*
      * Text to links
@@ -99,9 +119,13 @@ $.uce.PostControl.prototype = {
      * Message's User Data displaying handler
      */
     _updateMessage: function(event) {
-        var user = this._state.users[event.from];
-        if(_.isBoolean(user)===true || user === undefined) {
+        var users = this.options.roster.getUsersState();
+        if (_.isObject(users)!==true){
             return;
+        }
+        var user = users[event.from];
+        if(_.isBoolean(user)===true || user === undefined) {
+			return;
         }
         event.metadata.user = user;
         this._updateMessageUser(event, user);
@@ -125,7 +149,7 @@ $.uce.PostControl.prototype = {
      _appendUsername: function(afrom, user) {
         /*afrom.attr(
             {'href':'/accounts/'+user.name, 'target': '_BLANK'});*/
-        afrom.text(this.getScreenName(user.uid));
+        afrom.text(this.options.roster.getScreenName(user.uid));
     },
     /*
      * inject Group's info in every Message
@@ -175,10 +199,13 @@ $.uce.PostControl.prototype = {
      * User Data displaying 
      * fired every time the User roster changes
      * updates every message posted by userid
-     * (cf. ucewidget.js)
      */
     _updateRoster: function(userid) {
-        var user = this._state.users[userid];
+        var users = this.options.roster.getUsersState();
+        if (_.isObject(users)!==true){
+            return;
+        }
+        var user = users[userid];
         if (_.isObject(user)!==true){
             //console.warn("user is not an object");
             return;
