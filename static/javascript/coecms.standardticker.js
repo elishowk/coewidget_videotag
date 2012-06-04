@@ -136,8 +136,8 @@ $.uce.StandardTicker.prototype = {
      * Event Handler and public method
      */
 	playTicker: function(event) {
-        this.options.icon.removeClass("ui-icon-pause");
-        this.options.icon.addClass("ui-icon-play");
+        //this.options.icon.removeClass("ui-icon-pause");
+        //this.options.icon.addClass("ui-icon-play");
         if(this._updateLoop===null) {
             var that = this;
             this._updateLoop = window.setInterval(function(){
@@ -150,8 +150,8 @@ $.uce.StandardTicker.prototype = {
      * Event Handler
      */
 	pauseTicker: function(event) {
-		this.options.icon.removeClass("ui-icon-play");
-		this.options.icon.addClass("ui-icon-pause");
+		//this.options.icon.removeClass("ui-icon-play");
+		//this.options.icon.addClass("ui-icon-pause");
 		window.clearInterval(this._updateLoop);
         this._updateLoop = null;
         if(event!==undefined && event.metadata.time !== undefined) {

@@ -53,8 +53,8 @@ $.uce.Videotag.prototype = {
      */
     _create: function() {
         this._updateLoop = null;
-		this._injectQueue = [];
-		this._deferred = $.Deferred();
+        this._injectQueue = [];
+        this._deferred = $.Deferred();
         if(this._updateLoop===null) {
             var that = this;
             this._updateLoop = window.setInterval(function(){
@@ -63,16 +63,16 @@ $.uce.Videotag.prototype = {
             return;
         }
     },
-	_resolveDeferred: function() {
-		if( this._deferred.state()==="pending") {
-			this._deferred.resolve();
-			return;
-		}
-		if(this._deferred.state()==="resolved" || this._deferred.state()==="rejected") {
-			this._deferred = $.Deferred();
-			return;
-		}
-	},
+    _resolveDeferred: function() {
+        if( this._deferred.state()==="pending") {
+            this._deferred.resolve();
+            return;
+        }
+        if(this._deferred.state()==="resolved" || this._deferred.state()==="rejected") {
+            this._deferred = $.Deferred();
+            return;
+        }
+    },
     /**
      * UCEngine Event callback
     */
@@ -158,8 +158,8 @@ $.uce.Videotag.prototype = {
     /*
      * Event sender
      * Public method posting a new message
-	 * send 100 deep-tags with the current session
-	 * for(var i=0; i<100; i++){ $("#videoticker").data('videotag').postNewMessage({text: "benchmark", currentTime: Math.round(Math.random() * 120)}, function(){}); }
+     * send 100 deep-tags with the current session
+     * for(var i=0; i<100; i++){ $("#videoticker").data('videotag').postNewMessage({text: "benchmark", currentTime: Math.round(Math.random() * 120)}, function(){}); }
      */
     postNewMessage: function(metadata, successcallback) {
         var it = this;
@@ -275,9 +275,9 @@ $.uce.Videotag.prototype = {
                 });
         });
     },
-	/*
-	 * Wraps inner html into message div
-	 */
+    /*
+     * Wraps inner html into message div
+     */
     _getVideotagDiv: function(event, html) {
         return $('<div>').attr({
             'evtid': event.id,
@@ -297,15 +297,15 @@ $.uce.Videotag.prototype = {
         msgheader += "<div class='videoticker-comment-like-wrapper'>"+
             "<a href='javascript:void(0);' class='ui-videotag-message-vote videoticker-comment-like'>"+votes+"</a>"+
             "</div>";
-		msgheader += "</div>";
+        msgheader += "</div>";
         msgtext += "<div class='videoticker-comment-text'>";
-		msgtext += "<h3><time class='ui-videotag-message-date' datetime='"+
+        msgtext += "<h3><time class='ui-videotag-message-date' datetime='"+
             Math.round(event.metadata.currentTime)+"'>"+
             Math.round(event.metadata.currentTime).timetoHours().toString()+
             "</time>";
         msgtext += "<div class='ui-videotag-message-from' uid='"+event.from+"'></div></h3>";
         msgtext += "<p class='ui-videotag-message-text'>"+event.metadata.text+"</p>";
-		msgtext += "</div>";
+        msgtext += "</div>";
 
         html += msgheader + msgtext;
         var can = true;
@@ -325,11 +325,11 @@ $.uce.Videotag.prototype = {
         }
         var message = this._getVideotagDiv(event, html);
         this._enpowerMessage(event, message);
-		if(this._deferred.state()==="resolved" || this._deferred.state()==="rejected") {
-			this._deferred = $.Deferred();
-		}
-		this._injectQueue.push([$.extend(true, {}, event), message]);
-		this._deferred.done(this._positionMessage());
+        if(this._deferred.state()==="resolved" || this._deferred.state()==="rejected") {
+            this._deferred = $.Deferred();
+        }
+        this._injectQueue.push([$.extend(true, {}, event), message]);
+        this._deferred.done(this._positionMessage());
 
     },
     _appendShareDiv: function(event) {
@@ -349,13 +349,13 @@ $.uce.Videotag.prototype = {
     _positionMessage: function() {
         // TODO never more than one element into the queue
         // add support for multiple injection at one time
-		var data = this._injectQueue.pop();
-		if(data===undefined) {
-			return;
-		}
-		var event = data[0];
-		var message = data[1];
-		if(this.element.find(".ui-videotag-message").length === 0) {
+        var data = this._injectQueue.pop();
+        if(data===undefined) {
+            return;
+        }
+        var event = data[0];
+        var message = data[1];
+        if(this.element.find(".ui-videotag-message").length === 0) {
             this.element.append(message.after(this._appendShareDiv(event)));
             this._dispatchMessage(event, message);
             return;
@@ -371,7 +371,7 @@ $.uce.Videotag.prototype = {
                 return false;
             }
         });
-		this._dispatchMessage(event, message);
+        this._dispatchMessage(event, message);
     },
     /*
      * Attach click events on the message
@@ -400,8 +400,8 @@ $.uce.Videotag.prototype = {
      * internal event to notify message injection is done
      */
     _dispatchMessage: function(event, message) {
-		event.type = "videotag.message.dispatch";
-		event.metadata.element = message;
+        event.type = "videotag.message.dispatch";
+        event.metadata.element = message;
         this.options.ucemeeting.trigger(event);
     },
 
@@ -501,13 +501,13 @@ $.uce.Videotag.prototype = {
 
             });
     },
-	_setOption: function(key, value) {
-		$.Widget.prototype._setOption.apply(this, arguments);
-	},
+    _setOption: function(key, value) {
+        $.Widget.prototype._setOption.apply(this, arguments);
+    },
     clear: function() {
         this.element.empty();
     },
-	
+    
     destroy: function() {
         this.element.find('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
