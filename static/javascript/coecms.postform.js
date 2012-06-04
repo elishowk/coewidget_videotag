@@ -22,7 +22,7 @@ $.uce.PostForm.prototype = {
         clockContainer: $('.ui-postform-time')
     },
 
-	_clockLoop: null,
+    _clockLoop: null,
     /*
      * UI initialize
      */
@@ -51,7 +51,7 @@ $.uce.PostForm.prototype = {
             text.blur();
             that._startClock(); 
             text.val("");
-            $(".ui-postform-input-numChar").text("300");
+            $(".ui-postform-input-numChar").css({"color":"#3B3B3B"}).text("250");
             $btnReset.hide();
             $placehoder.show();
         };
@@ -69,7 +69,7 @@ $.uce.PostForm.prototype = {
             that._stopClock();
             var ct = that.options.player.uceplayer('getCurrentTime').toString();
             $('input.ui-postform-currenttime').val(ct);
-			$(document).bind('click', _outside);
+            $(document).bind('click', _outside);
         };
         text.focus(function(evtObj){
             _openForm();
@@ -83,7 +83,7 @@ $.uce.PostForm.prototype = {
                 _closeForm();
                 return false;
             }
-            if(textinput.length > 300) {
+            if(textinput.length > 250) {
                 _closeForm();
                 alert("post too long, please be more concise");
                 return false;
@@ -113,13 +113,13 @@ $.uce.PostForm.prototype = {
         text.keyup(function(event) {
             var numCharField = $(".ui-postform-input-numChar");
             
-            if ($(this).val().length < 300){
+            if ($(this).val().length < 250){
                 numCharField.css({"color":"#3B3B3B"});
             }
             else{
                 numCharField.css({"color":"#9c100c"});
             }
-            numCharField.text((300 - $(this).val().length).toString());
+            numCharField.text((250 - $(this).val().length).toString());
             // Manage ESC key press : toogle slide back to hidden & empty form
             if ( event.keyCode == 27 ) {
                 _closeForm();
@@ -152,15 +152,15 @@ $.uce.PostForm.prototype = {
         var toFacebook = ($('#ui-postform-share-facebook').hasClass('dim') === true);
         var toTwitter = ($('#ui-postform-share-twitter').hasClass('dim') === true);
         if(toFacebook===true) {
-			this.toFacebook(metadata.text, metadata.currentTime, metadata.href, metadata.title);
+            this.toFacebook(metadata.text, metadata.currentTime, metadata.href, metadata.title);
         }
         if(toTwitter===true) {
-			var title = $(".ui-postform-title").text();
+            var title = $(".ui-postform-title").text();
             var twpublish = this.toTwitter("twitter-intents-a", metadata.text, metadata.currentTime, metadata.href, title);
             window.open( $("#twitter-intents-a").attr("href"),
-				"intents",
-				"scrollbars=yes,resizable=yes,toolbar=no,location=yes,width=450,height=500,top=300,left=400");
-			this.options.ucemeeting.trigger({
+                "intents",
+                "scrollbars=yes,resizable=yes,toolbar=no,location=yes,width=450,height=500,top=300,left=400");
+            this.options.ucemeeting.trigger({
                 type: "notify.videotag.message.new.share.twitter",
                 'id': Date.now().toString(),
                 metadata: twpublish
@@ -171,8 +171,8 @@ $.uce.PostForm.prototype = {
             'id': Date.now().toString()
         });
     },
-	toFacebook: function(text, currentTime, href, title){
-		if(FB !== undefined) {
+    toFacebook: function(text, currentTime, href, title){
+        if(FB !== undefined) {
             var publish = {
                 method: 'feed',
                 message: text,
@@ -196,10 +196,10 @@ $.uce.PostForm.prototype = {
                 });
             });
         }
-	},
-	toTwitter: function(ancid, text, currentTime, href, title){
+    },
+    toTwitter: function(ancid, text, currentTime, href, title){
         var twpublish = {};
-		if(window.twttr !== undefined) {
+        if(window.twttr !== undefined) {
             this._initTwitterIntents(ancid);
             twpublish = {
                 url: href + "?starttime=" + (Math.round(currentTime)).toString(),
@@ -210,17 +210,17 @@ $.uce.PostForm.prototype = {
             $("#"+ancid).attr("href",  $("#"+ancid).attr("href") +
                 $.param(twpublish)
             );
-		}
-		return twpublish;
-	},
+        }
+        return twpublish;
+    },
     /*
      * Start the clock synchronised on player time
      */
     _startClock: function() {
-		var that=this;
-		this._clockLoop = window.setInterval(function(){
+        var that=this;
+        this._clockLoop = window.setInterval(function(){
             that._displayClock();
-		}, 1000);
+        }, 1000);
     },
     /*
      * Stop the clock
@@ -263,7 +263,10 @@ $.uce.PostForm.prototype = {
             seconds = "0" + seconds;
         }
 
-        var valueText = hours + ":" + minutes + ":" + seconds;
+        var valueText = minutes + ":" + seconds;
+        if(hours !== "00") {
+            valueText = hours + ":" + minutes + ":" + seconds;
+        }
         if (neg) {
             valueText = "-" + valueText;
         }
@@ -272,9 +275,9 @@ $.uce.PostForm.prototype = {
     },
 
     destroy: function() {
-		if(this._clockLoop!==null) {
-			window.clearInterval(this._clockLoop);
-		}
+        if(this._clockLoop!==null) {
+            window.clearInterval(this._clockLoop);
+        }
         this.element.find('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
     }
