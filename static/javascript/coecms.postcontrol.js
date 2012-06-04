@@ -90,8 +90,6 @@ $.uce.PostControl.prototype = {
         this._updateUser(user);
         this._updateGroup(user);
         this._updateUserAvatar(user);
-        user.type = "internal.user.received";
-        this.options.ucemeeting.trigger(user);
     },
 
     /*
@@ -194,28 +192,6 @@ $.uce.PostControl.prototype = {
         else {
             msg.find(".ui-videotag-message-avatar").attr("src", this.getDefaultAvatar());
         }
-    },
-    /*
-     * User Data displaying 
-     * fired every time the User roster changes
-     * updates every message posted by userid
-     */
-    _updateRoster: function(userid) {
-        var users = this.options.roster.getUsersState();
-        if (_.isObject(users)!==true){
-            return;
-        }
-        var user = users[userid];
-        if (_.isObject(user)!==true){
-            //console.warn("user is not an object");
-            return;
-        }
-        this._updateUser(user);
-        this._updateGroup(user);
-        this._updateUserAvatar(user);
-        var event = user;
-        event.type = "internal.user.received";
-        this.options.ucemeeting.trigger(event);
     },
     /*
      * injects User's name in every message
