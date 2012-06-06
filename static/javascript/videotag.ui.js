@@ -293,7 +293,7 @@ $.uce.Videotag.prototype = {
             msgtext = "";
         var votes = (event.metadata.votes.length).toString();
         msgheader += "<div class='ui-videotag-message-header videoticker-comment-user'>";
-        msgheader += "<img uid='"+event.from+"' class='ui-videotag-message-avatar avatar'></img>";
+        msgheader += "<img uid='"+event.from+"' class='ui-videotag-message-avatar avatar' src=''></img>";
         msgheader += "<div class='videoticker-comment-like-wrapper'>"+
             "<a href='javascript:void(0);' class='ui-videotag-message-vote videoticker-comment-like'>"+votes+"</a>"+
             "</div>";

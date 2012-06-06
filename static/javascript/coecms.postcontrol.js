@@ -28,7 +28,6 @@ $.uce.PostControl.prototype = {
     options: {
         ucemeeting: null,
         uceclient: null,
-        default_avatar_path: null,
         avatar_media_url: null,
         display_interval: 2000,
         speakers : [],
@@ -183,15 +182,7 @@ $.uce.PostControl.prototype = {
      * FIXME Only gets default avatar now
      */
     _appendAvatar: function(msg, user) {
-        if (user.metadata && user.metadata.mugshot && user.metadata.mugshot !== "") {
-            msg.find(".ui-videotag-message-avatar").attr("src", this.getMugshot(user.metadata.mugshot));
-        }
-        /*else if (user.metadata.email !== undefined) {
-            // TODO use getUserAvatar with gravatar
-        }*/ 
-        else {
-            msg.find(".ui-videotag-message-avatar").attr("src", this.getDefaultAvatar());
-        }
+        msg.attr("src", "http://www.gravatar.com/avatar/"+user.metadata.md5+"?d=retro");
     },
     /*
      * injects User's name in every message
@@ -223,19 +214,6 @@ $.uce.PostControl.prototype = {
                 that._appendAvatar($(this), user);
             }
         });
-    },
-    /*
-     * gets default avatar
-     */ 
-    getDefaultAvatar: function() {
-        return this.options.default_avatar_path;
-    },
-    /*
-     * TODO user md5 to get gravatar
-     * gets profile's avatar
-     */ 
-    getMugshot:function(path) {
-        return this.options.avatar_media_url + path;
     },
     destroy: function() {
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
