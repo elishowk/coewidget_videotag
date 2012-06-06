@@ -1,0 +1,344 @@
+
+/* COMMENTS 
+------------------------ */
+
+#video-comments {
+	position:absolute;
+	left:0;
+	top:67px;
+	bottom:55px;
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+}
+
+#video-comments.video-comments-w-filters {
+	bottom:116px;
+	border-bottom:1px solid #28282b;
+}
+
+#video-comments .pane-content {
+	background:#464647;
+}
+
+#video-comments > .pane {
+  background : #1a191a;
+  position   : absolute;
+  width      : 10px;
+  right      : 0;
+  top        : 0;
+  bottom     : 0;
+  opacity:1;
+  -webkit-transition    : .2s;
+  -moz-transition       : .2s;
+  -ms-transition        : .2s;
+  -o-transition         : .2s;
+  transition            : .2s;
+  -moz-border-radius    : 0;
+  -webkit-border-radius : 0;  
+  border-radius         : 0;
+}
+
+#video-comments  > .pane > .slider {
+	background:#878896 url(../images/artpack-player.png) no-repeat -141px center;
+  position              : relative;
+  margin                : 0 1px;
+  -moz-border-radius    : 0;
+  -webkit-border-radius : 0;  
+  border-radius         : 0;
+}
+.nano:hover > .pane, .pane.active {
+  opacity    : 1;
+}
+
+
+#page-player .ui-videotag-message,
+#page-player .ui-videotag-message-personality {
+	background:#464647;
+    background: -webkit-gradient(linear, left top, left bottom, from(#464647), to(rgba(142, 142, 142, .13))) !important;
+    background: -moz-linear-gradient(top,  #464647, rgba(142, 142, 142, .13)) !important;
+	background-image: -ms-linear-gradient(top, #464647, rgba(142, 142, 142, .13)); /* IE10 */
+	background-image: -o-linear-gradient(top, #464647, rgba(142, 142, 142, .13)); /* Opera 11.10+ */
+	background-image: linear-gradient(to bottom, #464647, rgba(142, 142, 142, .13));
+	border-bottom:1px solid #7e7e7e;
+	color:#c6c6c6;
+	font-size:11px;
+	line-height:15px;
+	padding:15px 0;
+	position:relative;
+	
+}
+
+.videoticker-comment-user,
+.videoticker-comment-text {
+	float:left;
+}
+
+.videoticker-comment-user {
+	color:#c6c6c6;
+	font-weight:bold;
+	text-align:center;
+	width:15%;
+}
+
+.videoticker-comment-like-wrapper:hover a,
+.videoticker-comment-like-wrapper.active a {
+	color:#dd5454;
+}
+
+.videoticker-comment-action-trigger {
+	background:url(../images/artpack-player.png) no-repeat -51px -42px;
+	cursor:pointer;
+	height:16px;
+	width:15px;
+	position:absolute;
+	top:5px;
+	right:13px;
+}
+
+.videoticker-comment-action-trigger:hover,
+.videoticker-comment-action-trigger.active {
+	background-position:-35px -42px;
+}
+
+.videoticker-comment-action {
+	position:absolute;
+	top:-2px;
+	right:20px;
+	visibility:hidden;
+	width:120px;
+}
+
+.videoticker-comment-action-trigger.active .videoticker-comment-action {
+	visibility:visible;
+}
+
+.videoticker-comment-action-arrow {
+	border-bottom: 5px solid transparent;
+    border-left: 5px solid #1a1a1a;
+    border-top: 5px solid transparent;
+	height:0;
+    margin-top: -5px;
+	position:absolute;
+    right: -5px;
+    top: 50%;
+	width:0;
+}
+
+.videoticker-comment-action-inner {
+	background:#1a1a1a;
+
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+    border-radius: 3px;
+	
+    color: #d2d2d2;
+    max-width: 200px;
+    padding: 3px 8px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.videoticker-comment-action a {
+	color:#d2d2d2;
+}
+
+.videoticker-comment-text {
+	cursor:pointer;
+	margin-right:11px;
+	padding:0 20px 0 0;
+	width:75%;
+}
+
+.ui-videotag-message:after {
+	background:url(../images/artpack-player.png) no-repeat -35px -30px;
+	bottom:0;
+	content:'';
+	height:8px;
+	left:50%;
+	margin-left:-7px;
+	position:absolute;
+	width:14px;
+	z-index:10;
+}
+
+.videoticker-comment-text:after {
+	background:url(../images/artpack-player.png) no-repeat -115px 0;
+	bottom:0;
+	content:'';
+	height:17px;
+	position:absolute;
+	right:0;
+	width:33px;
+}
+
+.ui-videotag-message-personality .videoticker-comment-text:after {
+	background:url(../images/artpack-player.png) no-repeat -63px 0;
+}
+
+.ui-videotag-message-myself .videoticker-comment-text:after {
+	background:url(../images/artpack-player.png) no-repeat -90px 0;
+}
+
+.videoticker-comment-text h3 {
+	color:#fff;
+	font-size:12px;
+}
+
+.videoticker-comment-text h3 time {
+	color:#d2d2d2
+}
+
+.videoticker-comment-user .avatar {
+	display:block;
+	height:23px;
+	margin:0 auto 10px;
+	width:23px
+}
+
+.ui-videotag-message-personality .videoticker-comment-user .avatar,
+.user-avatar-personality img {
+    box-shadow: 0 0 6px 2px rgba(0,150,250,1);
+}
+
+.videoticker-comment-like {
+	display:inline-block;
+	height: 20px;
+	margin:0 auto;
+	padding-left:19px;
+	position: relative;
+} 
+
+.videoticker-comment-like:before, 
+.videoticker-comment-like:after { 
+	position: absolute; 
+	content: ""; 
+	left: 8px; 
+	top: -1px; 
+	width: 8px; 
+	height: 13px; 
+	background: #b2b5bf; 
+	-moz-border-radius: 8px 8px 0 0; 
+		 border-radius: 8px 8px 0 0; 
+	-webkit-transform: rotate(-45deg); 
+	-moz-transform: rotate(-45deg); 
+	-ms-transform: rotate(-45deg); 
+	-o-transform: rotate(-45deg); 
+	transform: rotate(-45deg); 
+	-webkit-transform-origin: 0 100%; 
+	-moz-transform-origin: 0 100%; 
+	-ms-transform-origin: 0 100%; 
+	-o-transform-origin: 0 100%; 
+	transform-origin: 0 100%; 
+}
+
+.videoticker-comment-like-wrapper:hover .videoticker-comment-like:before, 
+.videoticker-comment-like-wrapper:hover .videoticker-comment-like:after,
+.videoticker-comment-like-wrapper.active .videoticker-comment-like:before, 
+.videoticker-comment-like-wrapper.active .videoticker-comment-like:after { 
+	background: #dd5454; 
+}
+
+.videoticker-comment-like:after { 
+	left: 0; 
+	-webkit-transform: rotate(45deg); 
+	-moz-transform: rotate(45deg); 
+	-ms-transform: rotate(45deg); 
+	-o-transform: rotate(45deg); 
+	transform: rotate(45deg); 
+	-webkit-transform-origin: 100% 100%; 
+	-moz-transform-origin: 100% 100%; 
+	-ms-transform-origin: 100% 100%; 
+	-o-transform-origin: 100% 100%; 
+	transform-origin :100% 100%; 
+}
+
+.videoticker-comment-share {
+	color:#c6c6c6;
+	clear:both;
+	height:100px;
+	display:none;
+	margin-right:10px;
+	/*
+	position:absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	z-index:100;
+	*/
+}
+
+.videoticker-comment-share div {
+
+    background-color:#747474;
+
+    background-image: linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -o-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -moz-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -ms-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+	height:100%;
+	text-align:center;
+	position:relative;
+	z-index:100;
+}
+
+.videoticker-comment-share p {
+	padding-top:30px;
+}
+
+.videoticker-comment-share-close {
+	background:url(../images/artpack-player.png) no-repeat 0 -42px;
+	bottom:0;
+	cursor:pointer;
+	height:12px;
+	left:50%;
+	margin-left:-16px;
+	position:absolute;
+	text-indent:-9999px;
+	width:32px;
+}
+/*
+.ui-videotag-message:hover .videoticker-comment-share {
+	visibility:visible;
+}
+*/
+
+.videoticker-comment-share-twitter,
+.videoticker-comment-share-facebook {
+	background-image:url(../images/artpack-player.png);
+	background-position:no-repeat;
+	display:inline-block;
+	line-height:26px;
+	text-indent:-9999px;
+}
+
+.videoticker-comment-share-twitter {
+	background-position:0 0;
+	height:26px;
+	width:35px;
+}
+
+.videoticker-comment-share-facebook {
+	background-position:-35px 0;
+	height:26px;
+	width:26px;
+}
+
+	/* filters
+	------------------------ */
+.video-comments-filters {
+	background-color:#28282b;
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, .1)), to(#212220)) !important;
+    background: -moz-linear-gradient(top,  rgba(255, 255, 255, .1), #212220) !important;
+	background-image: -ms-linear-gradient(top, rgba(255, 255, 255, .1), #212220); /* IE10 */
+	background-image: -o-linear-gradient(top, rgba(255, 255, 255, .1), #212220); /* Opera 11.10+ */
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, .1), #212220);
+	border-top:1px solid #5b5b5e;
+	position:absolute;
+	left:0;
+	bottom:50px;
+	height:65px;
+	width:100%;
+}
