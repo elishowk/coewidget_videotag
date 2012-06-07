@@ -32,7 +32,8 @@ $.uce.PostControl.prototype = {
         display_interval: 2000,
         speakers : [],
         postform: $('#form-comment').data('postform'),
-        roster: $('#roster').data('roster')
+        roster: $('#roster').data('roster'),
+        filters: $('#filters')
     },
 
     /*
@@ -71,6 +72,7 @@ $.uce.PostControl.prototype = {
         // force user info displaying
         this._updateMessage(event);
         this._postDispatchTrigger(event);
+        this.options.filters.data('filters').filterMessages();
     },
     /*
      * User Data displaying 
@@ -175,8 +177,7 @@ $.uce.PostControl.prototype = {
      */
     _updateMessageUserAvatar: function(event, user) {
         var msgav = event.metadata.element.find('.ui-videotag-message-avatar[uid='+user.uid+']');
-        if (msgav.attr("src")!==undefined || msgav.attr("src")!=="") { return; }
-        this._appendAvatar(msg, user);
+        this._appendAvatar(msgav, user);
     },
     /*
      * FIXME Only gets default avatar now
