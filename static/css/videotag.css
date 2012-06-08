@@ -547,7 +547,7 @@
 }
 /* FORM COMMENT */
 
-#form-comment {
+#form-comment, #livespeakerform {
 	border:1px solid rgba(44,59,43,.6);
 
 	background-color:#b8b8c7;
