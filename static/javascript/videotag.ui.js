@@ -303,7 +303,8 @@ $.uce.Videotag.prototype = {
             Math.round(event.metadata.currentTime)+"'>"+
             Math.round(event.metadata.currentTime).timetoHours().toString()+
             "</time>";
-        msgtext += "<div class='ui-videotag-message-from' uid='"+event.from+"'></div></h3>";
+        msgtext += "<span>- </span>";
+        msgtext += "<span class='ui-videotag-message-from' uid='"+event.from+"'></span></h3>";
         msgtext += "<p class='ui-videotag-message-text'>"+event.metadata.text+"</p>";
         msgtext += "</div>";
 
