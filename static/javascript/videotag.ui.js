@@ -66,6 +66,7 @@ $.uce.Videotag.prototype = {
     _resolveDeferred: function() {
         if( this._deferred.state()==="pending") {
             this._deferred.resolve();
+            $("#video-comments").resize();
             return;
         }
         if(this._deferred.state()==="resolved" || this._deferred.state()==="rejected") {

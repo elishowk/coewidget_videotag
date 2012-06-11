@@ -21,6 +21,7 @@
 	background:#464647;
 }
 
+.player-aside-box > .pane,
 #video-comments > .pane {
   background : #1a191a;
   position   : absolute;
@@ -39,6 +40,7 @@
   border-radius         : 0;
 }
 
+.player-aside-box > .pane > .slider,
 #video-comments  > .pane > .slider {
 	background:#878896 url(../images/artpack-player.png) no-repeat -141px center;
   position              : relative;
@@ -47,6 +49,7 @@
   -webkit-border-radius : 0;  
   border-radius         : 0;
 }
+.player-aside-box .nano:hover > .pane, .pane.active,
 .nano:hover > .pane, .pane.active {
   opacity    : 1;
 }
@@ -352,6 +355,7 @@
 }
 
 
+
 /** initial setup **/
 .nano {
   position : relative;
@@ -422,6 +426,7 @@
 	background:#464647;
 	border:1px solid #272730;
 	border-radius:7px;
+	height:auto;
 	padding:15px;
 	position:absolute;
 	left:0;
@@ -429,6 +434,21 @@
 	bottom:55px;
 	right:0;
 	overflow: hidden;
+	width:auto;
+}
+/*
+.player-aside-box .pane-content {
+    bottom: 15px;
+    left: 15px;
+    top: 65px;
+}
+*/
+.player-aside-box .nano-wrapper {
+	top:65px;
+	bottom:15px;
+	right:15px;
+	left:15px;
+	position:absolute;
 }
 
 .player-aside-box .main-title,
