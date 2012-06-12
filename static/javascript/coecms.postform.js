@@ -149,8 +149,8 @@ $.uce.PostForm.prototype = {
      *
      */
     sharePost: function(metadata) {
-        var toFacebook = ($('#ui-postform-share-facebook').hasClass('dim') === true);
-        var toTwitter = ($('#ui-postform-share-twitter').hasClass('dim') === true);
+        var toFacebook = ($('#form-comment #ui-postform-share-facebook').hasClass('dim') === true);
+        var toTwitter = ($('#form-comment #ui-postform-share-twitter').hasClass('dim') === true);
         if(toFacebook===true) {
             this.toFacebook(metadata.text, metadata.currentTime, metadata.href, metadata.title);
         }
