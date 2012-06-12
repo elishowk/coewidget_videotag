@@ -13,8 +13,12 @@
 }
 
 #video-comments.video-comments-w-filters {
-	bottom:116px;
+	bottom:50px;
 	border-bottom:1px solid #28282b;
+}
+
+#video-comments.video-comments-w-filters.video-comments-w-filters-shown {
+	bottom:116px; 
 }
 
 #video-comments .pane-content {
@@ -346,6 +350,7 @@
 	bottom:50px;
 	height:65px;
 	width:100%;
+	display: none;
 }
 
 #videoticker-block {
