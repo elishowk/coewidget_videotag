@@ -85,13 +85,13 @@ $.uce.StandardTicker.prototype = {
         if (typeof currenttime !== "number") {
             return;
         }
-        currentmessages = this.element.find(".ui-videotag-message[currenttime="+currenttime.toString()+"]");
+        currentmessages = this.element.find(".ui-videotag-message[currenttime="+currenttime.toString()+"].ui-videotag-selected");
         this._currentMessageAnc = currentmessages.last();
         if(this._currentMessageAnc !== undefined && this._currentMessageAnc.length == 1) {
             this.element.scrollTo(this._currentMessageAnc,
                 this._getScrollParams(settings, this._currentMessageAnc, currentmessages)); 
         } else {
-            var messages = this.element.find(".ui-videotag-message");
+            var messages = this.element.find(".ui-videotag-message.ui-videotag-selected");
             var maximum = messages.last();
             if (maximum.length===0) {
                return;
