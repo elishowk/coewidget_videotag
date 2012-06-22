@@ -41,8 +41,7 @@ $.uce.StandardTicker.prototype = {
             duration: 1000
         },
         autoScrollSettings: { 
-            duration : 500,
-            easing: 'swing'
+            duration : 500
         }
     },
     /*
@@ -111,33 +110,12 @@ $.uce.StandardTicker.prototype = {
      * Scroll params and functions
      */
     _getScrollParams: function(baseSettings, element, messages){
-        var that = this;
-        /*var offset = {};
-        if (element.length==1){
-            offset = { offset : {
-                top: -this.element.height() +
-                element.height() +
-                parseInt(element.css("marginTop"), 10) +
-                parseInt(element.css("borderTopWidth"), 10) +
-                parseInt(this.element.css("paddingBottom"), 10) +
-                parseInt(element.css("paddingBottom"), 10)
-            }};
-        }*/
-        var step = {};
-        if (messages.length > 0){
-            step = { step: function(now, fx) {
-                that.element.find(".ui-videotag-message").removeClass("ui-videotag-message-current");
-                messages.addClass("ui-videotag-message-current");
-            }};
-        }
-        return $.extend({}, baseSettings, step);
+        return $.extend({}, baseSettings);
     },
     /* 
      * Event Handler and public method
      */
     playTicker: function(event) {
-        //this.options.icon.removeClass("ui-icon-pause");
-        //this.options.icon.addClass("ui-icon-play");
         $(".videoticker-pause").addClass("no-pause");
         $("#video-comments").removeClass("video-comments-pause");
         if(this._updateLoop===null) {
@@ -152,8 +130,6 @@ $.uce.StandardTicker.prototype = {
      * Event Handler
      */
     pauseTicker: function(event) {
-        //this.options.icon.removeClass("ui-icon-play");
-        //this.options.icon.addClass("ui-icon-pause");
         window.clearInterval(this._updateLoop);
         this._updateLoop = null;
         if(event!==undefined && event.metadata.time !== undefined) {
