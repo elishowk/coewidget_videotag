@@ -72,7 +72,6 @@ $.uce.PostControl.prototype = {
         // force user info displaying
         this._updateMessage(event);
         this._postDispatchTrigger(event);
-        this.options.filters.data('filters').filterMessages();
     },
     /*
      * User Data displaying 
