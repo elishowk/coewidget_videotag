@@ -48,8 +48,8 @@ $.uce.StandardTicker.prototype = {
      * UCEngine events listening
      */
     meetingsEvents: {
-		"internal.videotag.tickerpause": "pauseTicker",
-		"internal.videotag.tickerplay": "playTicker"
+        "internal.videotag.tickerpause": "pauseTicker",
+        "internal.videotag.tickerplay": "playTicker"
     },
     /*
      * UI initialize
@@ -58,10 +58,10 @@ $.uce.StandardTicker.prototype = {
         this.element.scrollTo("100%", 0);
         this.options.mouseover = false;
         this._updateLoop = null;
-		this.playTicker();
+        this.playTicker();
         var that = this;
         this.element.parent().mouseenter(function() {
-		    that.pauseTicker();
+            that.pauseTicker();
             that.options.mouseover = true; 
         });
         this.element.parent().mouseleave(function() {
@@ -102,7 +102,7 @@ $.uce.StandardTicker.prototype = {
                 });
             if(maximum.data("currenttime") != this._currentMessageAnc.data("currenttime")) {
                 this.element.scrollTo(maximum,
-                    this._getScrollParams(settings, maximum, maximum));
+                    this._getScrollParams(settings, maximum, maximum)); 
             }
         }
     },
@@ -111,36 +111,12 @@ $.uce.StandardTicker.prototype = {
      */
     _getScrollParams: function(baseSettings, element, messages){
         var that = this;
-        /*var offset = {};
-        if (element.length==1){
-            offset = { offset : {
-                top: -this.element.height() +
-                element.height() +
-                parseInt(element.css("marginTop"), 10) +
-                parseInt(element.css("borderTopWidth"), 10) +
-                parseInt(this.element.css("paddingBottom"), 10) +
-                parseInt(element.css("paddingBottom"), 10)
-            }};
-        }*/
-        /*var step = {};
-        if (messages.length > 0){
-            step = { step: function(now, fx) {
-                that.element.find(".ui-videotag-message").removeClass("ui-videotag-message-current");
-                messages.addClass("ui-videotag-message-current");
-            }};
-        }*/
         return $.extend({}, baseSettings);
     },
     /* 
      * Event Handler and public method
      */
-<<<<<<< Updated upstream
-	playTicker: function(event) {
-        //this.options.icon.removeClass("ui-icon-pause");
-        //this.options.icon.addClass("ui-icon-play");
-=======
     playTicker: function(event) {
->>>>>>> Stashed changes
         if(this._updateLoop===null) {
             var that = this;
             this._updateLoop = window.setInterval(function(){
@@ -148,50 +124,42 @@ $.uce.StandardTicker.prototype = {
             }, that.options.updateInterval);
             return;
         }
-	},
+    },
     /* 
      * Event Handler
      */
-	pauseTicker: function(event) {
-		//this.options.icon.removeClass("ui-icon-play");
-		//this.options.icon.addClass("ui-icon-pause");
-		window.clearInterval(this._updateLoop);
+    pauseTicker: function(event) {
+        window.clearInterval(this._updateLoop);
         this._updateLoop = null;
         if(event!==undefined && event.metadata.time !== undefined) {
             this.scrollToCurrentTime(event.metadata.time);
         }
-	},
+        $(".videoticker-pause").removeClass("no-pause");
+        $("#video-comments").addClass("video-comments-pause");
+    },
     /*
      * Scrolls messages on player's currentTime
     */
     _updatePosition: function() {
-        if($(".videoticker-pause").hasClass("no-pause")===false)
+        if($(".videoticker-pause").hasClass("no-pause")===false) {
             $(".videoticker-pause").addClass("no-pause");
-        if($("#video-comments").hasClass("video-comments-pause")===true)
+        }
+        if($("#video-comments").hasClass("video-comments-pause")===true) {
             $("#video-comments").removeClass("video-comments-pause");
+        }
         if(this.options.mouseover === true ) {
             return;
         }
         var currentTime = this.options.player.uceplayer('getCurrentTime');
-<<<<<<< Updated upstream
 		if(currentTime == this.lastCurrentTime) {
-			this.options.icon.removeClass("ui-icon-play");
-			this.options.icon.addClass("ui-icon-pause");
-            return;
-		}
-        this.options.icon.removeClass("ui-icon-pause");
-        this.options.icon.addClass("ui-icon-play");
-=======
-        if(currentTime == this.lastCurrentTime) {
             return;
         }
->>>>>>> Stashed changes
         this.lastCurrentTime=currentTime;
         this._scrollToCurrentTime(currentTime, this.options.autoScrollSettings);
     },
-	_setOption: function(key, value) {
-		$.Widget.prototype._setOption.apply(this, arguments);
-	},
+    _setOption: function(key, value) {
+        $.Widget.prototype._setOption.apply(this, arguments);
+    },
     clear: function() {
         this.element.empty();
     },
