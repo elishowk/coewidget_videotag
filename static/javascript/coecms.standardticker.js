@@ -84,7 +84,7 @@ $.uce.StandardTicker.prototype = {
         if (typeof currenttime !== "number") {
             return;
         }
-        currentmessages = this.element.find(".ui-videotag-message[currenttime="+currenttime.toString()+"].ui-videotag-selected");
+        var currentmessages = this.element.find(".ui-videotag-message[currenttime="+currenttime.toString()+"].ui-videotag-selected");
         this._currentMessageAnc = currentmessages.last();
         if(this._currentMessageAnc !== undefined && this._currentMessageAnc.length == 1) {
             this.element.scrollTo(this._currentMessageAnc,
@@ -140,14 +140,14 @@ $.uce.StandardTicker.prototype = {
      * Scrolls messages on player's currentTime
     */
     _updatePosition: function() {
+        if(this.options.mouseover === true ) {
+            return;
+        }
         if($(".videoticker-pause").hasClass("no-pause")===false) {
             $(".videoticker-pause").addClass("no-pause");
         }
         if($("#video-comments").hasClass("video-comments-pause")===true) {
             $("#video-comments").removeClass("video-comments-pause");
-        }
-        if(this.options.mouseover === true ) {
-            return;
         }
         var currentTime = this.options.player.uceplayer('getCurrentTime');
         if(currentTime == this.lastCurrentTime) {
