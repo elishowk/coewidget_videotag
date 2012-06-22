@@ -10,6 +10,15 @@
     width: 100%;
     height: auto;
     overflow: hidden;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: .4s;
+    -webkit-transition-timing-function: linear, ease-out;
+    -moz-transition-property: all;
+    -moz-transition-duration: .4s;
+    -moz-transition-timing-function: linear, ease-out;
+    transition-property: all;
+    transition-duration: .4s;
+    transition-timing-function: linear, ease-out;
 }
 
 #video-comments.video-comments-w-filters {
@@ -21,8 +30,52 @@
     bottom:116px; 
 }
 
+#video-comments.video-comments-pause {
+    top:88px;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: .4s;
+    -webkit-transition-timing-function: linear, ease-out;
+    -moz-transition-property: all;
+    -moz-transition-duration: .4s;
+    -moz-transition-timing-function: linear, ease-out;
+    transition-property: all;
+    transition-duration: .4s;
+    transition-timing-function: linear, ease-out;
+}
+
 #video-comments .pane-content {
     background:#464647;
+}
+
+.videoticker-pause {
+    background-color: #6D168B;
+    -webkit-transition-property: background-color;
+    -webkit-transition-duration: .3s;
+    -webkit-transition-timing-function: linear, ease-out;
+    -moz-transition-property: background-color;
+    -moz-transition-duration: .3s;
+    -moz-transition-timing-function: linear, ease-out;
+    transition-property: background-color;
+    transition-duration: .3s;
+    transition-timing-function: linear, ease-out;
+}
+
+.videoticker-pause.no-pause {
+    background-color : transparent;
+    -webkit-transition-property: background-color;
+    -webkit-transition-duration: 1s;
+    -webkit-transition-timing-function: linear, ease-out;
+    -moz-transition-property: background-color;
+    -moz-transition-duration: .3s;
+    -moz-transition-timing-function: linear, ease-out;
+    transition-property: background-color;
+    transition-duration: .3s;
+    transition-timing-function: linear, ease-out;
+}
+
+.videoticker-pause-picture{
+    position: relative;
+    left: 48%;
 }
 
 .player-aside-box > .pane,
