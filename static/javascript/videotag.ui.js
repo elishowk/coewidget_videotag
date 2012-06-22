@@ -282,7 +282,7 @@ $.uce.Videotag.prototype = {
     _getVideotagDiv: function(event, html) {
         return $('<div>').attr({
             'evtid': event.id,
-            'class': 'ui-videotag-message overflow-hidden',
+            'class': 'ui-videotag-message overflow-hidden ui-videotag-selected',
             'currenttime': event.metadata.currentTime}).html(html);
     },
     /*
