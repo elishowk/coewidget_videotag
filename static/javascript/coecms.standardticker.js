@@ -41,8 +41,7 @@ $.uce.StandardTicker.prototype = {
             duration: 1000
         },
         autoScrollSettings: { 
-            duration : 500,
-            easing: 'swing'
+            duration : 500
         }
     },
     /*
@@ -103,7 +102,7 @@ $.uce.StandardTicker.prototype = {
                 });
             if(maximum.data("currenttime") != this._currentMessageAnc.data("currenttime")) {
                 this.element.scrollTo(maximum,
-                    this._getScrollParams(settings, maximum, maximum)); 
+                    this._getScrollParams(settings, maximum, maximum));
             }
         }
     },
@@ -123,14 +122,14 @@ $.uce.StandardTicker.prototype = {
                 parseInt(element.css("paddingBottom"), 10)
             }};
         }*/
-        var step = {};
+        /*var step = {};
         if (messages.length > 0){
             step = { step: function(now, fx) {
                 that.element.find(".ui-videotag-message").removeClass("ui-videotag-message-current");
                 messages.addClass("ui-videotag-message-current");
             }};
-        }
-        return $.extend({}, baseSettings, step);
+        }*/
+        return $.extend({}, baseSettings);
     },
     /* 
      * Event Handler and public method
