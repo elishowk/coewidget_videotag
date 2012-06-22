@@ -116,8 +116,6 @@ $.uce.StandardTicker.prototype = {
      * Event Handler and public method
      */
     playTicker: function(event) {
-        $(".videoticker-pause").addClass("no-pause");
-        $("#video-comments").removeClass("video-comments-pause");
         if(this._updateLoop===null) {
             var that = this;
             this._updateLoop = window.setInterval(function(){
@@ -142,19 +140,19 @@ $.uce.StandardTicker.prototype = {
      * Scrolls messages on player's currentTime
     */
     _updatePosition: function() {
+        if($(".videoticker-pause").hasClass("no-pause")===false) {
+            $(".videoticker-pause").addClass("no-pause");
+        }
+        if($("#video-comments").hasClass("video-comments-pause")===true) {
+            $("#video-comments").removeClass("video-comments-pause");
+        }
         if(this.options.mouseover === true ) {
-            this.options.icon.removeClass("ui-icon-play");
-            this.options.icon.addClass("ui-icon-pause");
             return;
         }
         var currentTime = this.options.player.uceplayer('getCurrentTime');
         if(currentTime == this.lastCurrentTime) {
-            this.options.icon.removeClass("ui-icon-play");
-            this.options.icon.addClass("ui-icon-pause");
             return;
         }
-        this.options.icon.removeClass("ui-icon-pause");
-        this.options.icon.addClass("ui-icon-play");
         this.lastCurrentTime=currentTime;
         this._scrollToCurrentTime(currentTime, this.options.autoScrollSettings);
     },
