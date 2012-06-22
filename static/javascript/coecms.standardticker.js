@@ -49,8 +49,8 @@ $.uce.StandardTicker.prototype = {
      * UCEngine events listening
      */
     meetingsEvents: {
-		"internal.videotag.tickerpause": "pauseTicker",
-		"internal.videotag.tickerplay": "playTicker"
+        "internal.videotag.tickerpause": "pauseTicker",
+        "internal.videotag.tickerplay": "playTicker"
     },
     /*
      * UI initialize
@@ -59,10 +59,10 @@ $.uce.StandardTicker.prototype = {
         this.element.scrollTo("100%", 0);
         this.options.mouseover = false;
         this._updateLoop = null;
-		this.playTicker();
+        this.playTicker();
         var that = this;
         this.element.parent().mouseenter(function() {
-		    that.pauseTicker();
+            that.pauseTicker();
             that.options.mouseover = true; 
         });
         this.element.parent().mouseleave(function() {
@@ -135,9 +135,11 @@ $.uce.StandardTicker.prototype = {
     /* 
      * Event Handler and public method
      */
-	playTicker: function(event) {
+    playTicker: function(event) {
         //this.options.icon.removeClass("ui-icon-pause");
         //this.options.icon.addClass("ui-icon-play");
+        $(".videoticker-pause").addClass("no-pause");
+        $("#video-comments").removeClass("video-comments-pause");
         if(this._updateLoop===null) {
             var that = this;
             this._updateLoop = window.setInterval(function(){
@@ -145,19 +147,21 @@ $.uce.StandardTicker.prototype = {
             }, that.options.updateInterval);
             return;
         }
-	},
+    },
     /* 
      * Event Handler
      */
-	pauseTicker: function(event) {
-		//this.options.icon.removeClass("ui-icon-play");
-		//this.options.icon.addClass("ui-icon-pause");
-		window.clearInterval(this._updateLoop);
+    pauseTicker: function(event) {
+        //this.options.icon.removeClass("ui-icon-play");
+        //this.options.icon.addClass("ui-icon-pause");
+        window.clearInterval(this._updateLoop);
         this._updateLoop = null;
         if(event!==undefined && event.metadata.time !== undefined) {
             this.scrollToCurrentTime(event.metadata.time);
         }
-	},
+        $(".videoticker-pause").removeClass("no-pause");
+        $("#video-comments").addClass("video-comments-pause");
+    },
     /*
      * Scrolls messages on player's currentTime
     */
@@ -168,19 +172,19 @@ $.uce.StandardTicker.prototype = {
             return;
         }
         var currentTime = this.options.player.uceplayer('getCurrentTime');
-		if(currentTime == this.lastCurrentTime) {
-			this.options.icon.removeClass("ui-icon-play");
-			this.options.icon.addClass("ui-icon-pause");
+        if(currentTime == this.lastCurrentTime) {
+            this.options.icon.removeClass("ui-icon-play");
+            this.options.icon.addClass("ui-icon-pause");
             return;
-		}
+        }
         this.options.icon.removeClass("ui-icon-pause");
         this.options.icon.addClass("ui-icon-play");
         this.lastCurrentTime=currentTime;
         this._scrollToCurrentTime(currentTime, this.options.autoScrollSettings);
     },
-	_setOption: function(key, value) {
-		$.Widget.prototype._setOption.apply(this, arguments);
-	},
+    _setOption: function(key, value) {
+        $.Widget.prototype._setOption.apply(this, arguments);
+    },
     clear: function() {
         this.element.empty();
     },
