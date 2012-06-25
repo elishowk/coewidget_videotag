@@ -120,7 +120,7 @@ $.uce.Videotag.prototype = {
             data.metadata.votes = [];
         }
         data.metadata.votes.push( event.from );
-        var buttonVote = this.element.find('.ui-videotag-message[evtid="'+event.metadata.parent+'"] .ui-videotag-message-vote');
+        var buttonVote = this.element.children('.ui-videotag-message[evtid="'+event.metadata.parent+'"] .ui-videotag-message-vote');
         var newText = data.metadata.votes.length.toString();
         var that = this;
         buttonVote.each(function(){
@@ -145,8 +145,8 @@ $.uce.Videotag.prototype = {
             });
             return;
         }
-        this.element.find('.videoticker-comment-share[data-event="'+event.metadata.parent+'"]').remove();
-        this.element.find('.ui-videotag-message[evtid="'+event.metadata.parent+'"]').remove();
+        this.element.children('.videoticker-comment-share[data-event="'+event.metadata.parent+'"]').remove();
+        this.element.children('.ui-videotag-message[evtid="'+event.metadata.parent+'"]').remove();
         this.element.removeData(event.metadata.parent);
     },
 
@@ -357,14 +357,14 @@ $.uce.Videotag.prototype = {
         }
         var event = data[0];
         var message = data[1];
-        if(this.element.find(".ui-videotag-message").length === 0) {
+        if(this.element.children(".ui-videotag-message").length === 0) {
             this.element.append(message.after(this._appendShareDiv(event)));
             this._dispatchMessage(event, message);
             return;
         }
         var that = this;
-        this.element.find('.ui-videotag-message').each(function(i){
-            if(i==that.element.find(".ui-videotag-message").length-1) {
+        this.element.children('.ui-videotag-message').each(function(i){
+            if(i==that.element.children(".ui-videotag-message").length-1 && i > 0) {
                 that.element.append(message.after(that._appendShareDiv(event)));
                 return false;
             }
@@ -413,7 +413,7 @@ $.uce.Videotag.prototype = {
     _attachRemove: function(evtype, evid, message) {
         var that = this;
         var originalevent = this.element.data(evid);
-        message.find('.ui-videotag-message-trash').click(function() {
+        message.children('.ui-videotag-message-trash').click(function() {
                 var md = {
                     parent: evid,
                     parentfrom: originalevent.from
@@ -460,7 +460,7 @@ $.uce.Videotag.prototype = {
      */
     _attachVote: function(evid, message) {
         var that = this;
-        message.find('.ui-videotag-message-vote').click(function() {
+        message.children('.ui-videotag-message-vote').click(function() {
             var button = $(this);
             button.unbind("click");
             button.parent().addClass("active");
@@ -511,7 +511,7 @@ $.uce.Videotag.prototype = {
     },
     
     destroy: function() {
-        this.element.find('*').remove();
+        this.element.children('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
     }
 
