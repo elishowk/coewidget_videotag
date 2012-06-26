@@ -413,7 +413,7 @@ $.uce.Videotag.prototype = {
     _attachRemove: function(evtype, evid, message) {
         var that = this;
         var originalevent = this.element.data(evid);
-        message.children('.ui-videotag-message-trash').click(function() {
+        message.find('.ui-videotag-message-trash').on("click", function() {
                 var md = {
                     parent: evid,
                     parentfrom: originalevent.from
@@ -460,7 +460,7 @@ $.uce.Videotag.prototype = {
      */
     _attachVote: function(evid, message) {
         var that = this;
-        message.children('.ui-videotag-message-vote').click(function() {
+        message.find('.ui-videotag-message-vote').on("click", function() {
             var button = $(this);
             button.unbind("click");
             button.parent().addClass("active");
