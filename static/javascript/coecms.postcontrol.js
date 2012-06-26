@@ -97,7 +97,7 @@ $.uce.PostControl.prototype = {
      * TODO use twitter text js
      */
     _linkTextData: function(event) {
-        var spantext = event.metadata.element.find(".ui-videotag-message-text");        
+        var spantext = event.metadata.element.find(".ui-videotag-message-text");
         // Change http URIs into links
         var httpLinks = /(https?:\/\/[^ \)\"]+)/g;
         spantext.html(spantext.html().replace(httpLinks, '<a href="$1" target="_BLANK">$1</a>'));
