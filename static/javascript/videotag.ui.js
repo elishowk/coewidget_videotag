@@ -120,7 +120,7 @@ $.uce.Videotag.prototype = {
             data.metadata.votes = [];
         }
         data.metadata.votes.push( event.from );
-        var buttonVote = this.element.children('.ui-videotag-message[evtid="'+event.metadata.parent+'"] .ui-videotag-message-vote');
+        var buttonVote = this.element.find('.ui-videotag-message[evtid="'+event.metadata.parent+'"] .ui-videotag-message-vote');
         var newText = data.metadata.votes.length.toString();
         var that = this;
         buttonVote.each(function(){
