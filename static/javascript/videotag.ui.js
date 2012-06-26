@@ -347,10 +347,9 @@ $.uce.Videotag.prototype = {
     },
     /*
      * Inject the message in the chronological order
+     * TODO add support for multiple injection at one time
      */
     _positionMessage: function() {
-        // TODO never more than one element into the queue
-        // add support for multiple injection at one time
         var data = this._injectQueue.pop();
         if(data===undefined) {
             return;
@@ -364,12 +363,12 @@ $.uce.Videotag.prototype = {
         }
         var that = this;
         this.element.children('.ui-videotag-message').each(function(i){
-            if(i==that.element.children(".ui-videotag-message").length-1 && i > 0) {
-                that.element.append(message.after(that._appendShareDiv(event)));
-                return false;
-            }
             if ($(this).data('currenttime') <= message.data('currenttime')) {
                 $(this).before(message.after(that._appendShareDiv(event)));
+                return false;
+            }
+            if(i==that.element.children(".ui-videotag-message").length-1 && i > 1) {
+                that.element.append(message.after(that._appendShareDiv(event)));
                 return false;
             }
         });
