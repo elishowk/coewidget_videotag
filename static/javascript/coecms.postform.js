@@ -57,9 +57,7 @@ $.uce.PostForm.prototype = {
         };
         var _openForm = function(event) {
             if (getUsername()=="anonymous"){
-                $("#signin-popup").show();
-                $("#signin-popup-overlay").show();
-                $("#identification").trigger("click");
+                that.options.ucemeeting.trigger({"type": "internal.user.disconnected"});
                 $("#non-signin-alert").show();
                 $('#non-signin-alert').fadeOut(4000, function() {});
                 return;
