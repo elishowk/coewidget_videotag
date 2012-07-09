@@ -222,12 +222,7 @@ $.uce.PostControl.prototype = {
      * Sign-in popup opened when the internal disconnection event is fired
      */
     _handleReconnectUser: function(event) {
-        var _height = (Math.ceil($('#pre-footer').offset().top) - 150);
-        $('#signin-popup-overlay').css({
-            'height': _height,
-            'display': 'block'
-        }); 
-        $('#signin-popup').show();
+        window.COE._openSignonPopup();
     }
 
 };
