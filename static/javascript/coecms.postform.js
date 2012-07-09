@@ -57,19 +57,7 @@ $.uce.PostForm.prototype = {
         };
         var _openForm = function(event) {
             if (getUsername()=="anonymous"){
-                $("#signin-form").show();
-                $("#gigspeaker-form").hide();
-                $.get("/coe/signon/?next="+window.location.toString(), function(data, status, xhrobj) {
-                    $("#signin-form").html(data);
-                    var _height = (Math.ceil($('#pre-footer').offset().top) - 150);
-                    $('#signin-popup-overlay').css({
-                        'height': _height,
-                        'display': 'block'
-                    });
-                    $('#signin-popup').show();
-                });
-                $("#signin-popup-overlay").show();
-                $("#identification").trigger("click");
+                that.options.ucemeeting.trigger({"type": "internal.user.disconnected"});
                 $("#non-signin-alert").show();
                 $('#non-signin-alert').fadeOut(4000, function() {});
                 return;
