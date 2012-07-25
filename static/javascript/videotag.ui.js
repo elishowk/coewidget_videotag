@@ -300,11 +300,12 @@ $.uce.Videotag.prototype = {
             "</div>";
         msgheader += "</div>";
         msgtext += "<div class='videoticker-comment-text'>";
-        msgtext += "<h3><time class='ui-videotag-message-date' data-videoseconds='"+
+        msgtext += "<h3><time class='ui-videotag-message-date' title='click to play video at "+
+            Math.round(event.metadata.currentTime).timetoHours().toString()+
+            "' data-videoseconds='"+
             Math.round(event.metadata.currentTime)+"'>"+
             Math.round(event.metadata.currentTime).timetoHours().toString()+
             "</time>";
-        msgtext += "<span>- </span>";
         msgtext += "<span class='ui-videotag-message-from' uid='"+event.from+"'></span></h3>";
         msgtext += "<p class='ui-videotag-message-text'>"+event.metadata.text+"</p>";
         msgtext += "</div>";
