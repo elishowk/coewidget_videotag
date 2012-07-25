@@ -822,3 +822,24 @@
     max-height: 71px;
 }
 
+.ui-videotag-message time {
+	border:1px solid #36363a;
+	border-radius:3px;
+	display: inline-block;
+	padding: 0px 3px;
+}
+
+.ui-videotag-message time:hover {
+	background-color:#616161;
+
+    background-image: linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -o-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -moz-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+    background-image: -ms-linear-gradient(bottom, rgba(0,0,0,.1) 10%, rgba(255,255,255,.1) 100%);
+	
+	border:1px solid #36363a;
+	border-radius:3px;
+	color:#fff;
+	
+}
