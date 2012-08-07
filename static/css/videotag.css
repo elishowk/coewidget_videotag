@@ -806,6 +806,14 @@
     background-position:-90px -20px;
 }
 
+.cursor-gravatar {
+	cursor: help;
+}
+
+.cursor-default {
+	cursor: default;
+}
+
 .form-comment-avatar {
     background-color:#2a2930;
 
