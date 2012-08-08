@@ -1,6 +1,8 @@
-{% load static %}
+{% load static i18n %}
 <div id="{{ id }}" class="overflow-hidden">
-    <img src="{% get_static_prefix %}images/comment-avatar.png" alt="" class="form-comment-avatar">
+    <a class="cursor-gravatar" href="http://gravatar.com/emails/" title="{% trans 'Change your avatar with Gravatar.com !' %}" target="_blank">
+        <img src="{% get_static_prefix %}images/comment-avatar.png" alt="" class="form-comment-avatar">
+    </a>
     <div class="form-comment-fake-input">
         <div class="ui-postform-time">00:00:00</div>
         <div class="form-comment-fake-input-holder">

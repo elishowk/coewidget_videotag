@@ -129,6 +129,14 @@ $.uce.PostForm.prototype = {
                 $(".ui-postform-submit").click();
             }
         });
+        
+        // remove gravatar suggestion if anonymous
+        if ((getUsername() === "anonymous") || (getUsername() === "")){
+            that.element.find('a').attr("href","#");
+            that.element.find('a').attr("title", "")
+            that.element.find('a').removeClass("cursor-gravatar")
+            that.element.find('a').addClass("cursor-default")
+        } 
     },
     /*
      * Twitter intents
