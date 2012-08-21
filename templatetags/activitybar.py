@@ -33,9 +33,9 @@ def activitybar_css():
     return {}
 
 @register.inclusion_tag('activitybar/activitybar.html')
-def activitybar_timeline(id, bins):
-    return { 'id': id, 'bins': bins }
+def activitybar_timeline(id, bins, classes):
+    return { 'id': id, 'bins': bins, 'classes': classes }
 
 @register.inclusion_tag('activitybar/playhead.html')
-def activitybar_playhead(id):
-    return { 'id': id }
+def activitybar_playhead(id, classes):
+    return { 'id': id, 'classes': classes }
