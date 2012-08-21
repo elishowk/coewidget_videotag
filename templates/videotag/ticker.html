@@ -1,0 +1,17 @@
+{% load i18n static activitybar %}
+<div id="{{ id }}" class="{{ classes }}">
+    <div id="videoticker-block" class="bg-gradiant">
+        {% activitybar_timeline "videoticker-timeline" 20 "" %}
+        {% activitybar_playhead "videoticker-timer" "" %}
+    </div>
+    <div class="videoticker-pause">
+        <img class="videoticker-pause-picture" src="{% get_static_prefix %}images/pause.png">
+    </div>
+    <div id="video-comments" class="nano video-comments-w-filters">
+        <div id="{{ tickerid }}" class="{{ tickerclasses }}"></div><!-- /#videotagticker -->
+    </div><!-- /#video-comments -->
+    <div class="video-comments-filters">
+        <ul class="selected-hashtags-list selected-list"></ul>
+        <ul class="selected-users-list selected-list"></ul>
+    </div>
+</div>
