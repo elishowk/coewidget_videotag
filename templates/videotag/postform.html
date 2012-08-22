@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 <div id="{{ id }}" class="overflow-hidden">
     <img src="{% get_static_prefix %}images/comment-avatar.png" alt="" class="form-comment-avatar">
     <div class="form-comment-fake-input">
@@ -6,14 +6,14 @@
         <div class="form-comment-fake-input-holder">
             <textarea id="timeline-user-comment" rows="3" cols="5" placeholder="" maxlength="250"></textarea>
             <input type="hidden" class="ui-postform-currenttime">
-            <div class="form-comment-fake-input-placeholder">Et vous, qu'entendez-vous ?</div>
-            <button type="button" class="close-comment-box">effacer</button>
+            <div class="form-comment-fake-input-placeholder">{% trans "write your comment" %}</div>
+            <button type="button" class="close-comment-box">{% trans "erase" %}</button>
         </div>
         <span class="ui-postform-input-numChar">250</span>
         <span class="timeline_service_icons">
-            <a href="javascript:void(0)" title="Partagez cette annonce sur Facebook" alt="Facebook" class="service_icon" id="ui-postform-share-facebook" data-original-title="Facebook">facebook</a>
-            <a href="javascript:void(0)" title="Partagez cette annonce sur Twitter" alt="Twitter" class="service_icon" id="ui-postform-share-twitter" data-original-title="Twitter">twitter</a>
+            <a href="javascript:void(0)" title="{% trans 'share on Facebook' %}" alt="Facebook" class="service_icon" id="ui-postform-share-facebook" data-original-title="Facebook">facebook</a>
+            <a href="javascript:void(0)" title="{% trans 'share on Twitter' %}" alt="Twitter" class="service_icon" id="ui-postform-share-twitter" data-original-title="Twitter">twitter</a>
         </span>
     </div>
-    <button type="button" class="ui-postform-submit">Envoyer</button>
+    <button type="button" class="ui-postform-submit">{% trans "Post" %}</button>
 </div>
