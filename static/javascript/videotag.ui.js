@@ -300,11 +300,12 @@ $.uce.Videotag.prototype = {
             "</div>";
         msgheader += "</div>";
         msgtext += "<div class='videoticker-comment-text'>";
-        msgtext += "<h3><time class='ui-videotag-message-date' datetime='"+
+        msgtext += "<h3><time class='ui-videotag-message-date' title='click to play video at "+
+            Math.round(event.metadata.currentTime).timetoHours().toString()+
+            "' data-videoseconds='"+
             Math.round(event.metadata.currentTime)+"'>"+
             Math.round(event.metadata.currentTime).timetoHours().toString()+
             "</time>";
-        msgtext += "<span>- </span>";
         msgtext += "<span class='ui-videotag-message-from' uid='"+event.from+"'></span></h3>";
         msgtext += "<p class='ui-videotag-message-text'>"+event.metadata.text+"</p>";
         msgtext += "</div>";
@@ -395,6 +396,7 @@ $.uce.Videotag.prototype = {
             this._attachVote(evid, message);
         }
         message.data('currenttime', Number(event.metadata.currentTime));
+        this._attachPlay(message);
     },
 
     /*
@@ -498,9 +500,19 @@ $.uce.Videotag.prototype = {
                             'metadata': md
                         });
                     }
-                });
-
             });
+        });
+    },
+    _attachPlay: function(message) {
+        var that = this;
+        message.find('.ui-videotag-message-date').on("click", function(event) {
+            var seconds = $(this).attr("data-videoseconds");
+            if(seconds && seconds !== "") {
+                that.options.player.data('uceplayer').seek(parseInt(seconds, 10));
+            }
+            event.preventDefault();
+            return false;
+        });
     },
     _setOption: function(key, value) {
         $.Widget.prototype._setOption.apply(this, arguments);
