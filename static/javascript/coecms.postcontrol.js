@@ -75,7 +75,7 @@ $.uce.PostControl.prototype = {
     },
     /*
      * User Data displaying 
-	 * fired every time the User roster changes
+	 * fired every time user's data request arrived
 	 * updates every message posted by userid
      */
     _updateRoster: function(event) {
@@ -131,7 +131,7 @@ $.uce.PostControl.prototype = {
         this._updateMessageUserAvatar(event, user);
     },
     /*
-     * injects User's name in every message
+     * injects User's name in ONE message
      */
     _updateMessageUser: function(event, user) {
         var afrom = event.metadata.element.find(".ui-videotag-message-from[uid="+user.uid+"]");
@@ -150,7 +150,7 @@ $.uce.PostControl.prototype = {
         afrom.text(this.options.roster.getScreenName(user.uid));
     },
     /*
-     * inject Group's info in every Message
+     * inject Group's info in ONE message
      */
     _updateMessageGroup: function(event, user) {
         this._appendMessageGroup(event.metadata.element, user);
@@ -172,14 +172,14 @@ $.uce.PostControl.prototype = {
         }
     },
     /*
-     * Injects User's avatar in every message
+     * Injects User's avatar in ONE message
      */
     _updateMessageUserAvatar: function(event, user) {
         var msgav = event.metadata.element.find('.ui-videotag-message-avatar[uid='+user.uid+']');
         this._appendAvatar(msgav, user);
     },
     /*
-     * FIXME Only gets default avatar now
+     * FIXME Only gets the gravatar 
      */
     _appendAvatar: function(msg, user) {
         msg.attr("src", "http://www.gravatar.com/avatar/"+user.metadata.md5+"?d=retro");
