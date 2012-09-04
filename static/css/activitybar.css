@@ -1,0 +1,117 @@
+/* --------------------- 
+* TICKER
+------------------------- */
+	
+.videoticker-timeline-wrapper { 
+	position:absolute;
+	padding:0;
+	overflow:hidden;
+	height:20px;
+	cursor:pointer !important;
+	top:20px;
+	left:20px;
+	right:20px;
+	border-bottom:1px solid;
+	border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	-moz-border-radius: 5px;
+}
+
+.videoticker-timeline-wrapper div {
+	height:100%;
+	overflow:hidden;
+	width:100%;
+}
+
+#videoticker-timeline span:first-child {
+	border-top-left-radius:5px;
+	border-bottom-left-radius:5px;
+}
+
+#videoticker-timeline span:last-child {
+	border-top-right-radius:5px;
+	border-bottom-right-radius:5px;
+}
+
+#videoticker-timeline span {
+	background:#323235;
+	display:block;
+	float:left;
+	height:100%;
+	width:1px;
+}
+
+#videoticker-timeline span.comment {
+	background:#5d5d5e;
+}
+
+#videoticker-timeline span.user-comment {
+	background:#7f25a1;
+}
+
+#videoticker-timeline span.personality-comment {
+	background:#2577cb;
+}
+
+#videoticker-timer {
+	background:url(../images/artpack-player.png) no-repeat 0 -60px;
+	padding-top:45px;
+	position:absolute;
+	top:6px;
+	left:10px;
+	width:47px;
+}
+
+#videoticker-timer,
+#videoticker-frame-comment {
+	color:#fff;
+	font-size:10px;
+	text-align:center;
+}
+
+#videoticker-frame-comment {
+	display:none;
+	position:absolute;
+	left:120px;
+	padding-top:50px;
+	width:60px;
+	pointer-events:none;
+}
+
+#videoticker-frame-comment.active {
+	display:block;
+}
+
+.videoticker-frame-comment-total {
+	background:#26262f;
+	border-radius: 2px; 
+	-webkit-border-radius: 2px; 
+	-moz-border-radius: 2px;
+	font-size:15px;
+	line-height:15px;
+	color:#bbb;
+	padding:4px;
+	position:absolute;
+	top:-10px;
+	left:0;
+	width:50px;
+}
+
+.videoticker-frame-comment-total span:after {
+	background:url(../images/artpack-player.png) no-repeat -50px -60px;
+	content:'';
+	float:right;
+	height:14px;
+	width:17px;
+}
+
+.videoticker-frame-comment-total:after {
+	border-left:5px solid transparent;	
+	border-right:5px solid transparent;
+	border-top:5px solid #26262f;
+	content:'';
+	position:absolute;
+	top:23px;
+	left:50%;
+	margin-left:-3px;
+}
