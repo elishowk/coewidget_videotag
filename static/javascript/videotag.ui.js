@@ -336,15 +336,17 @@ $.uce.Videotag.prototype = {
 
     },
     _appendShareDiv: function(event) {
-        return '<div data-event="'+event.id+'" class="videoticker-comment-share">'+
-            '<div>'+
+        var shareelt = document.createElement('div');
+        shareelt.setAttribute('class', 'videoticker-comment-share');
+        shareelt.setAttribute('data-event', event.id);
+        shareelt.innerHTML = '<div>'+
                 '<p>Partager sur '+
                 '<a id="ui-videotag-message-share-twitter-'+event.id+'" href="javascript:void(0)" class="videoticker-comment-share-twitter">twitter</a> '+
                 '<a id="ui-videotag-message-share-facebook-'+event.id+'" href="javascript:void(0)" class="videoticker-comment-share-facebook">facebook</a>'+
                 '</p>'+
                 '<span class="videoticker-comment-share-close">close</span>'+
-            '</div>'+
-        '</div>';
+            '</div>';
+        return shareelt
     },
     /*
      * Inject the message in the chronological order
@@ -357,26 +359,26 @@ $.uce.Videotag.prototype = {
         }
         var event = data[0];
         var message = data[1];
-        if (message.length === 0 || event === undefined) {
+        if (!message.length || !event) {
             return;
         }
-        message.after(this._appendShareDiv(event));
-        if (this.element.children('.ui-videotag-message').length === 0) {
-            this.element.append(message.after(this._appendShareDiv(event)));
+        this.element.get(0).insertBefore(this._appendShareDiv(event), message.get(0).nextSibling);
+        var childCount = this.element.get(0).childElementCount / 2;
+        if (childCount === 0.5) {
+            this.element.get(0).appendChild(message.get(0));
             this._dispatchMessage(event, message);
             return;
         }
         var currenttime = message.data('currenttime');
-        var lastindex = this.element.children('.ui-videotag-message').length - 1;
         var that = this;
         this.element.children('.ui-videotag-message').each(function(i) {
             if (!this.hasAttribute('currenttime')) { return true; }
             if (parseInt(this.getAttribute('currenttime'), 10) <= currenttime) {
-                that.element[0].insertBefore(message[0], this);
+                that.element.get(0).insertBefore(message.get(0), this);
                 return false;
             }
-            if (i == lastindex && i > 1) {
-                that.element[0].appendChild(message[O]);
+            if (i == childCount - 1 && i > 1) {
+                that.element.get(0).appendChild(message.get(0));
                 return false;
             }
         });
