@@ -11,7 +11,7 @@
 *  Copyright (C) 2011 CommOnEcoute,
 *  maintained by Elias Showk <elias.showk@gmail.com>
 *  source code at https://github.com/CommOnEcoute/ucengine-widgets
-*   
+*
 *   Videotag widget is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Affero General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -124,14 +124,14 @@ $.uce.Videotag.prototype = {
         var newText = data.metadata.votes.length.toString();
         var that = this;
         buttonVote.each(function(){
-            $(this).text(newText); 
+            $(this).text(newText);
             if (event.from === that.options.uceclient.uid) {
                 $(this).unbind("click");
                 $(this).parent().addClass("active");
             }
         });
     },
-    
+
     /**
      * UCEngine Event callback
     */
@@ -171,8 +171,8 @@ $.uce.Videotag.prototype = {
                 if(err) {
                     if(err==401) {
                         it.options.ucemeeting.trigger({
-                            'type': "internal.user.disconnected", 
-                            'id': Date.now().toString(), 
+                            'type': "internal.user.disconnected",
+                            'id': Date.now().toString(),
                             'metadata': { error: err }
                         });
                     } else {
@@ -205,7 +205,7 @@ $.uce.Videotag.prototype = {
         _.each(event.metadata.hashtag, function(ht) {
             var md = {
                 hashtag: ht,
-                lang: event.metadata.lang 
+                lang: event.metadata.lang
             };
             that.options.ucemeeting.push(
                 {
@@ -216,8 +216,8 @@ $.uce.Videotag.prototype = {
                     if(err) {
                         if(err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': "internal.user.disconnected",
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -245,7 +245,7 @@ $.uce.Videotag.prototype = {
         _.each(event.metadata.hashtag, function(ht) {
             var md = {
                 hashtag: ht,
-                lang: event.metadata.lang 
+                lang: event.metadata.lang
             };
             that.options.ucemeeting.push(
                 {
@@ -256,8 +256,8 @@ $.uce.Videotag.prototype = {
                     if(err) {
                         if(err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': "internal.user.disconnected",
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -301,10 +301,10 @@ $.uce.Videotag.prototype = {
         msgheader += "</div>";
         msgtext += "<div class='videoticker-comment-text'>";
         msgtext += "<h3><time class='ui-videotag-message-date' title='click to play video at "+
-            Math.round(event.metadata.currentTime).timetoHours().toString()+
+            event.metadata.currentTime.timetoHours()+
             "' data-videoseconds='"+
-            Math.round(event.metadata.currentTime)+"'>"+
-            Math.round(event.metadata.currentTime).timetoHours().toString()+
+            event.metadata.currentTime.toString()+"'>"+
+            event.metadata.currentTime.timetoHours()+
             "</time>";
         msgtext += "<span class='ui-videotag-message-from' uid='"+event.from+"'></span></h3>";
         msgtext += "<p class='ui-videotag-message-text'>"+event.metadata.text+"</p>";
@@ -352,24 +352,31 @@ $.uce.Videotag.prototype = {
      */
     _positionMessage: function() {
         var data = this._injectQueue.pop();
-        if(data===undefined) {
+        if (data === undefined || data.length != 2) {
             return;
         }
         var event = data[0];
         var message = data[1];
-        if(this.element.children(".ui-videotag-message").length === 0) {
+        if (message.length === 0 || event === undefined) {
+            return;
+        }
+        message.after(this._appendShareDiv(event));
+        if (this.element.children('.ui-videotag-message').length === 0) {
             this.element.append(message.after(this._appendShareDiv(event)));
             this._dispatchMessage(event, message);
             return;
         }
+        var currenttime = message.data('currenttime');
+        var lastindex = this.element.children('.ui-videotag-message').length - 1;
         var that = this;
-        this.element.children('.ui-videotag-message').each(function(i){
-            if ($(this).data('currenttime') <= message.data('currenttime')) {
-                $(this).before(message.after(that._appendShareDiv(event)));
+        this.element.children('.ui-videotag-message').each(function(i) {
+            if (!this.hasAttribute('currenttime')) { return true; }
+            if (parseInt(this.getAttribute('currenttime'), 10) <= currenttime) {
+                that.element[0].insertBefore(message[0], this);
                 return false;
             }
-            if(i==that.element.children(".ui-videotag-message").length-1 && i > 1) {
-                that.element.append(message.after(that._appendShareDiv(event)));
+            if (i == lastindex && i > 1) {
+                that.element[0].appendChild(message[O]);
                 return false;
             }
         });
@@ -426,10 +433,10 @@ $.uce.Videotag.prototype = {
                 md,
                 function(err, data, xhr){
                     if(err) {
-                        if(err==401) {    
+                        if(err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': "internal.user.disconnected",
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -440,7 +447,7 @@ $.uce.Videotag.prototype = {
                                 name: that.options.uceclient.name
                             };
                             that.options.ucemeeting.trigger({
-                                'type': "notify."+evtype+".error", 
+                                'type': "notify."+evtype+".error",
                                 'metadata': md
                             });
                         }
@@ -448,7 +455,7 @@ $.uce.Videotag.prototype = {
                         // decrement hashtag selectors
                         that._pushHashtagDelete(originalevent);
                         that.options.ucemeeting.trigger({
-                            'type': "notify."+evtype, 
+                            'type': "notify."+evtype,
                             'metadata': md
                         });
                     }
@@ -475,10 +482,10 @@ $.uce.Videotag.prototype = {
                 md,
                 function(err, data, xhr){
                     if(err) {
-                        if(err==401) {    
+                        if(err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': "internal.user.disconnected",
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -489,14 +496,14 @@ $.uce.Videotag.prototype = {
                                 name: that.options.uceclient.name
                             };
                             that.options.ucemeeting.trigger({
-                                'type': "notify.videotag.message.vote.error", 
+                                'type': "notify.videotag.message.vote.error",
                                 'metadata': md
                             });
                         }
                     } else {
                         // TODO give a chance to cancel a vote, later
                         that.options.ucemeeting.trigger({
-                            'type': "notify.videotag.message.vote", 
+                            'type': "notify.videotag.message.vote",
                             'metadata': md
                         });
                     }
@@ -520,7 +527,7 @@ $.uce.Videotag.prototype = {
     clear: function() {
         this.element.empty();
     },
-    
+
     destroy: function() {
         this.element.children('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy

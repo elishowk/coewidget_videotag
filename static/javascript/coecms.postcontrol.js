@@ -8,7 +8,7 @@
 *  Copyright (C) 2011 CommOnEcoute,
 *  maintained by Elias Showk <elias.showk@gmail.com>
 *  source code at https://github.com/CommOnEcoute/ucengine-widgets
-*   
+*
 *   postcontrol widget is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Affero General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -74,7 +74,7 @@ $.uce.PostControl.prototype = {
         this._postDispatchTrigger(event);
     },
     /*
-     * User Data displaying 
+     * User Data displaying
 	 * fired every time user's data request arrived
 	 * updates every message posted by userid
      */
@@ -179,7 +179,7 @@ $.uce.PostControl.prototype = {
         this._appendAvatar(msgav, user);
     },
     /*
-     * FIXME Only gets the gravatar 
+     * FIXME Only gets the gravatar
      */
     _appendAvatar: function(msg, user) {
         msg.attr("src", "http://www.gravatar.com/avatar/"+user.metadata.md5+"?d=retro");
