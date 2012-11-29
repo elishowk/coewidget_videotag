@@ -64,7 +64,7 @@ $.uce.Videotag.prototype = {
         }
     },
     _resolveDeferred: function() {
-        if( this._deferred.state() === 'pending') {
+        if(this._deferred.state() === 'pending') {
             this._deferred.resolve();
             $('#video-comments').resize();
             return;
@@ -120,7 +120,7 @@ $.uce.Videotag.prototype = {
         if (_.isArray(data.metadata.votes) === false) {
             data.metadata.votes = [];
         }
-        data.metadata.votes.push( event.from );
+        data.metadata.votes.push(event.from);
         var buttonVote = this.element.find('.ui-videotag-message[evtid="'+event.metadata.parent+'"] .ui-videotag-message-vote');
         var newText = data.metadata.votes.length.toString();
         var that = this;
@@ -161,7 +161,12 @@ $.uce.Videotag.prototype = {
      * Event sender
      * Public method posting a new message
      * send 100 deep-tags with the current session
-     * for(var i=0; i<100; i++){ $('#videoticker').data('videotag').postNewMessage({text: 'benchmark', currentTime: Math.round(Math.random() * 120)}, function(){}); }
+     * for(var i=0; i<100; i++){
+     *      $('#videoticker').data('videotag').postNewMessage({
+     *          text: 'benchmark',
+     *          currentTime: Math.round(Math.random() * 120)},
+     *          function(){});
+     *  }
      */
     postNewMessage: function(metadata, successcallback) {
         var it = this;
@@ -169,8 +174,8 @@ $.uce.Videotag.prototype = {
             'videotag.message.new',
             metadata,
             function(err, data, xhr) {
-                if(err) {
-                    if(err==401) {
+                if (err) {
+                    if (err == 401) {
                         it.options.ucemeeting.trigger({
                             'type': 'internal.user.disconnected',
                             'id': Date.now().toString(),
@@ -190,7 +195,7 @@ $.uce.Videotag.prototype = {
                     }
                 } else {
                     it._pushHashtagAdd({'metadata': metadata});
-                    if(successcallback!==undefined) {
+                    if (successcallback !== undefined) {
                         successcallback(metadata);
                     }
                 }
@@ -215,7 +220,7 @@ $.uce.Videotag.prototype = {
                 md,
                 function(err, data, xhr) {
                     if (err) {
-                        if (err==401) {
+                        if (err == 401) {
                             that.options.ucemeeting.trigger({
                                 'type': 'internal.user.disconnected',
                                 'id': Date.now().toString(),
@@ -229,7 +234,7 @@ $.uce.Videotag.prototype = {
                                 name: that.options.uceclient.name
                             };
                             that.options.ucemeeting.trigger({
-                                type: "notify.message.hashtag.add.error",
+                                type: 'notify.message.hashtag.add.error',
                                 metadata: md
                             });
                         }
@@ -250,12 +255,12 @@ $.uce.Videotag.prototype = {
             };
             that.options.ucemeeting.push(
                 {
-                    type: "message.hashtag.delete"
+                    type: 'message.hashtag.delete'
                 },
                 md,
                 function(err, data, xhr) {
                     if (err) {
-                        if (err==401) {
+                        if (err == 401) {
                             that.options.ucemeeting.trigger({
                                 'type': 'internal.user.disconnected',
                                 'id': Date.now().toString(),
@@ -298,14 +303,14 @@ $.uce.Videotag.prototype = {
         msgheader += "<img uid='"+event.from+"' class='ui-videotag-message-avatar avatar' src=''></img>";
         msgheader += "<div class='videoticker-comment-like-wrapper'>"+
             "<a href='javascript:void(0);' class='ui-videotag-message-vote videoticker-comment-like'>"+votes+"</a>"+
-            "</div>";
+            '</div>';
         msgheader += "</div>";
         msgtext += "<div class='videoticker-comment-text'>";
-        msgtext += "<h3><time class='ui-videotag-message-date' title='click to play video at "+
-            Math.round(event.metadata.currentTime).timetoHours().toString()+
-            "' data-videoseconds='"+
-            Math.round(event.metadata.currentTime)+"'>"+
-            Math.round(event.metadata.currentTime).timetoHours().toString()+
+        msgtext += "<h3><time class='ui-videotag-message-date' title='click to play video at " +
+            event.metadata.currentTime.timetoHours() +
+            "' data-videoseconds='" +
+            event.metadata.currentTime.toString()+"'>" +
+            event.metadata.currentTime.timetoHours() +
             "</time>";
         msgtext += "<span class='ui-videotag-message-from' uid='"+event.from+"'></span></h3>";
         msgtext += "<p class='ui-videotag-message-text'>"+event.metadata.text+"</p>";
@@ -337,15 +342,17 @@ $.uce.Videotag.prototype = {
 
     },
     _appendShareDiv: function(event) {
-        return '<div data-event="'+event.id+'" class="videoticker-comment-share">'+
-            '<div>'+
+        var shareelt = document.createElement('div');
+        shareelt.setAttribute('class', 'videoticker-comment-share');
+        shareelt.setAttribute('data-event', event.id);
+        shareelt.innerHTML = '<div>'+
                 '<p>Partager sur '+
                 '<a id="ui-videotag-message-share-twitter-'+event.id+'" href="javascript:void(0)" class="videoticker-comment-share-twitter">twitter</a> '+
                 '<a id="ui-videotag-message-share-facebook-'+event.id+'" href="javascript:void(0)" class="videoticker-comment-share-facebook">facebook</a>'+
                 '</p>'+
                 '<span class="videoticker-comment-share-close">close</span>'+
-            '</div>'+
-        '</div>';
+            '</div>';
+        return shareelt;
     },
     /*
      * Inject the message in the chronological order
@@ -353,28 +360,40 @@ $.uce.Videotag.prototype = {
      */
     _positionMessage: function() {
         var data = this._injectQueue.pop();
-        if (data===undefined) {
+        if (data === undefined || data.length != 2) {
             return;
         }
         var event = data[0];
         var message = data[1];
-        if (this.element.children('.ui-videotag-message').length === 0) {
-            this.element.append(message.after(this._appendShareDiv(event)));
+        if (!message.length || !event) {
+            return;
+        }
+        var messages = this.element.children('.ui-videotag-message');
+        var childCount = messages.length;
+        var shareelt = this._appendShareDiv(event);
+        if (childCount === 0) {
+            this.element.get(0).appendChild(message.get(0));
+            this.element.get(0).appendChild(shareelt);
             this._dispatchMessage(event, message);
             return;
         }
+        var currenttime = message.data('currenttime');
         var that = this;
-        this.element.children('.ui-videotag-message').each(function(i) {
-            if ($(this).data('currenttime') <= message.data('currenttime')) {
-                $(this).before(message.after(that._appendShareDiv(event)));
+        messages.each(function(i) {
+            if (!this.hasAttribute('currenttime')) { return true; }
+            if (parseInt(this.getAttribute('currenttime'), 10) <= currenttime) {
+                that.element.get(0).insertBefore(message.get(0), this);
+                that.element.get(0).insertBefore(shareelt, this);
                 return false;
             }
-            if (i==that.element.children('.ui-videotag-message').length-1 && i > 1) {
-                that.element.append(message.after(that._appendShareDiv(event)));
+            if (i == childCount - 1 && i > 1) {
+                that.element.get(0).appendChild(message.get(0));
+                that.element.get(0).appendChild(shareelt);
                 return false;
             }
         });
         this._dispatchMessage(event, message);
+        delete messages;
     },
     /*
      * Attach click events on the message
@@ -393,10 +412,10 @@ $.uce.Videotag.prototype = {
         }
         // can't vote for myself nor vote twice
         var data = this.element.data(event.id);
-        if (event.from != this.options.uceclient.uid && _.include(data.metadata.votes, this.options.uceclient.uid)===false ) {
+        if (event.from != this.options.uceclient.uid && _.include(data.metadata.votes, this.options.uceclient.uid) === false) {
             this._attachVote(evid, message);
         }
-        message.data('currenttime', Number(event.metadata.currentTime));
+        message.data('currenttime', event.metadata.currentTime);
         this._attachPlay(message);
     },
 
@@ -425,9 +444,9 @@ $.uce.Videotag.prototype = {
                     type: evtype
                 },
                 md,
-                function(err, data, xhr) {
+                function (err, data, xhr) {
                     if (err) {
-                        if (err==401) {
+                        if (err == 401) {
                             that.options.ucemeeting.trigger({
                                 'type': 'internal.user.disconnected',
                                 'id': Date.now().toString(),
@@ -490,7 +509,7 @@ $.uce.Videotag.prototype = {
                                 name: that.options.uceclient.name
                             };
                             that.options.ucemeeting.trigger({
-                                'type': "notify.videotag.message.vote.error",
+                                'type': 'notify.videotag.message.vote.error',
                                 'metadata': md
                             });
                         }
@@ -529,7 +548,7 @@ $.uce.Videotag.prototype = {
 
 };
 
-if($.uce.widget !== undefined) {
+if ($.uce.widget !== undefined) {
     $.uce.widget('videotag', new $.uce.Videotag());
 }
 
