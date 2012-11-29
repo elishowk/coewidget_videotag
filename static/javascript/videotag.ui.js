@@ -11,7 +11,7 @@
 *  Copyright (C) 2011 CommOnEcoute,
 *  maintained by Elias Showk <elias.showk@gmail.com>
 *  source code at https://github.com/CommOnEcoute/ucengine-widgets
-*   
+*
 *   Videotag widget is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU Affero General Public License as published by
 *   the Free Software Foundation, either version 3 of the License, or
@@ -29,12 +29,12 @@
 (function($) {
 
 if (typeof $.uce === 'undefined') { $.uce = {}; }
-$.uce.Videotag = function(){};
+$.uce.Videotag = function() {};
 $.uce.Videotag.prototype = {
     options: {
         ucemeeting: null,
         uceclient: null,
-        lang: "any",
+        lang: 'any',
         player: null,
         userCanDelete: false,
         updateInterval: 2000
@@ -43,10 +43,10 @@ $.uce.Videotag.prototype = {
      * UCEngine events listening
      */
     meetingsEvents: {
-        "videotag.message.new"      : "_handleMessage",
-        "videotag.message.vote"     : "_handleVoteMessage",
-        "videotag.message.delete"   : "_handleDeleteMessage",
-        "videotag.message.owndelete": "_handleDeleteOwnMessage"
+        'videotag.message.new'      : '_handleMessage',
+        'videotag.message.vote'     : '_handleVoteMessage',
+        'videotag.message.delete'   : '_handleDeleteMessage',
+        'videotag.message.owndelete': '_handleDeleteOwnMessage'
     },
     /*
      * UI initialize
@@ -55,21 +55,21 @@ $.uce.Videotag.prototype = {
         this._updateLoop = null;
         this._injectQueue = [];
         this._deferred = $.Deferred();
-        if(this._updateLoop===null) {
+        if (this._updateLoop===null) {
             var that = this;
-            this._updateLoop = window.setInterval(function(){
+            this._updateLoop = window.setInterval(function() {
                 that._resolveDeferred();
             }, that.options.updateInterval);
             return;
         }
     },
     _resolveDeferred: function() {
-        if( this._deferred.state()==="pending") {
+        if( this._deferred.state() === 'pending') {
             this._deferred.resolve();
-            $("#video-comments").resize();
+            $('#video-comments').resize();
             return;
         }
-        if(this._deferred.state()==="resolved" || this._deferred.state()==="rejected") {
+        if(this._deferred.state()==='resolved' || this._deferred.state()==='rejected') {
             this._deferred = $.Deferred();
             return;
         }
@@ -78,7 +78,8 @@ $.uce.Videotag.prototype = {
      * UCEngine Event callback
     */
     _handleMessage: function(event) {
-        if (event.metadata === undefined || event.metadata.text === undefined || event.metadata.currentTime === undefined) {
+        if (event.metadata === undefined || event.metadata.text === undefined ||
+            event.metadata.currentTime === undefined) {
             return;
         }
         if (event.metadata.hashtag===undefined) {
@@ -88,11 +89,11 @@ $.uce.Videotag.prototype = {
             event.metadata.votes = [];
         }
         var data = this.element.data(event.id);
-        if(data) {
+        if (data) {
             if(data.deleted===true) {
                 return;
             }
-            if(data.metadata.votes.length>0) {
+            if(data.metadata.votes.length > 0) {
                 $.merge( event.metadata.votes, data.metadata.votes);
             }
         }
@@ -116,29 +117,29 @@ $.uce.Videotag.prototype = {
             });
             return;
         }
-        if (_.isArray(data.metadata.votes) === false){
+        if (_.isArray(data.metadata.votes) === false) {
             data.metadata.votes = [];
         }
         data.metadata.votes.push( event.from );
         var buttonVote = this.element.find('.ui-videotag-message[evtid="'+event.metadata.parent+'"] .ui-videotag-message-vote');
         var newText = data.metadata.votes.length.toString();
         var that = this;
-        buttonVote.each(function(){
-            $(this).text(newText); 
+        buttonVote.each(function() {
+            $(this).text(newText);
             if (event.from === that.options.uceclient.uid) {
-                $(this).unbind("click");
-                $(this).parent().addClass("active");
+                $(this).unbind('click');
+                $(this).parent().addClass('active');
             }
         });
     },
-    
+
     /**
      * UCEngine Event callback
     */
     _handleDeleteMessage: function(event) {
         var data = this.element.data(event.metadata.parent);
         if (!data) {
-            this.element.data(event.metadata.parent,{
+            this.element.data(event.metadata.parent, {
                 id: event.metadata.parent,
                 deleted: true,
                 metadata: {}
@@ -160,19 +161,19 @@ $.uce.Videotag.prototype = {
      * Event sender
      * Public method posting a new message
      * send 100 deep-tags with the current session
-     * for(var i=0; i<100; i++){ $("#videoticker").data('videotag').postNewMessage({text: "benchmark", currentTime: Math.round(Math.random() * 120)}, function(){}); }
+     * for(var i=0; i<100; i++){ $('#videoticker').data('videotag').postNewMessage({text: 'benchmark', currentTime: Math.round(Math.random() * 120)}, function(){}); }
      */
     postNewMessage: function(metadata, successcallback) {
         var it = this;
         this.options.ucemeeting.push(
-            "videotag.message.new",
+            'videotag.message.new',
             metadata,
             function(err, data, xhr) {
                 if(err) {
                     if(err==401) {
                         it.options.ucemeeting.trigger({
-                            'type': "internal.user.disconnected", 
-                            'id': Date.now().toString(), 
+                            'type': 'internal.user.disconnected',
+                            'id': Date.now().toString(),
                             'metadata': { error: err }
                         });
                     } else {
@@ -183,7 +184,7 @@ $.uce.Videotag.prototype = {
                             name: it.options.uceclient.name
                         };
                         it.options.ucemeeting.trigger({
-                            type: "notify.videotag.message.new.error",
+                            type: 'notify.videotag.message.new.error',
                             metadata: metadata
                         });
                     }
@@ -205,19 +206,19 @@ $.uce.Videotag.prototype = {
         _.each(event.metadata.hashtag, function(ht) {
             var md = {
                 hashtag: ht,
-                lang: event.metadata.lang 
+                lang: event.metadata.lang
             };
             that.options.ucemeeting.push(
                 {
-                    type: "message.hashtag.add"
+                    type: 'message.hashtag.add'
                 },
                 md,
-                function(err, data, xhr){
-                    if(err) {
-                        if(err==401) {
+                function(err, data, xhr) {
+                    if (err) {
+                        if (err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': 'internal.user.disconnected',
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -245,19 +246,19 @@ $.uce.Videotag.prototype = {
         _.each(event.metadata.hashtag, function(ht) {
             var md = {
                 hashtag: ht,
-                lang: event.metadata.lang 
+                lang: event.metadata.lang
             };
             that.options.ucemeeting.push(
                 {
                     type: "message.hashtag.delete"
                 },
                 md,
-                function(err, data, xhr){
-                    if(err) {
-                        if(err==401) {
+                function(err, data, xhr) {
+                    if (err) {
+                        if (err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': 'internal.user.disconnected',
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -268,7 +269,7 @@ $.uce.Videotag.prototype = {
                                 name: that.options.uceclient.name
                             };
                             that.options.ucemeeting.trigger({
-                                'type': "notify.message.hashtag.delete.error",
+                                'type': 'notify.message.hashtag.delete.error',
                                 'metadata': md
                             });
                         }
@@ -289,9 +290,9 @@ $.uce.Videotag.prototype = {
      * Creates the message's html
      */
     _injectVideotag: function(event) {
-        var html = "",
-            msgheader = "",
-            msgtext = "";
+        var html = '',
+            msgheader = '',
+            msgtext = '';
         var votes = (event.metadata.votes.length).toString();
         msgheader += "<div class='ui-videotag-message-header videoticker-comment-user'>";
         msgheader += "<img uid='"+event.from+"' class='ui-videotag-message-avatar avatar' src=''></img>";
@@ -308,7 +309,7 @@ $.uce.Videotag.prototype = {
             "</time>";
         msgtext += "<span class='ui-videotag-message-from' uid='"+event.from+"'></span></h3>";
         msgtext += "<p class='ui-videotag-message-text'>"+event.metadata.text+"</p>";
-        msgtext += "</div>";
+        msgtext += '</div>';
 
         html += msgheader + msgtext;
         var can = true;
@@ -328,7 +329,7 @@ $.uce.Videotag.prototype = {
         }
         var message = this._getVideotagDiv(event, html);
         this._enpowerMessage(event, message);
-        if(this._deferred.state()==="resolved" || this._deferred.state()==="rejected") {
+        if(this._deferred.state()==='resolved' || this._deferred.state()==='rejected') {
             this._deferred = $.Deferred();
         }
         this._injectQueue.push([$.extend(true, {}, event), message]);
@@ -352,23 +353,23 @@ $.uce.Videotag.prototype = {
      */
     _positionMessage: function() {
         var data = this._injectQueue.pop();
-        if(data===undefined) {
+        if (data===undefined) {
             return;
         }
         var event = data[0];
         var message = data[1];
-        if(this.element.children(".ui-videotag-message").length === 0) {
+        if (this.element.children('.ui-videotag-message').length === 0) {
             this.element.append(message.after(this._appendShareDiv(event)));
             this._dispatchMessage(event, message);
             return;
         }
         var that = this;
-        this.element.children('.ui-videotag-message').each(function(i){
+        this.element.children('.ui-videotag-message').each(function(i) {
             if ($(this).data('currenttime') <= message.data('currenttime')) {
                 $(this).before(message.after(that._appendShareDiv(event)));
                 return false;
             }
-            if(i==that.element.children(".ui-videotag-message").length-1 && i > 1) {
+            if (i==that.element.children('.ui-videotag-message').length-1 && i > 1) {
                 that.element.append(message.after(that._appendShareDiv(event)));
                 return false;
             }
@@ -381,9 +382,9 @@ $.uce.Videotag.prototype = {
     _enpowerMessage: function(event, message) {
         var evid = event.id;
         var can = true;
-        var evtype = "videotag.message.delete";
+        var evtype = 'videotag.message.delete';
         if (event.from == this.options.uceclient.uid) {
-            evtype = "videotag.message.owndelete";
+            evtype = 'videotag.message.owndelete';
         } else {
             can = this.options.userCanDelete;
         }
@@ -403,7 +404,7 @@ $.uce.Videotag.prototype = {
      * internal event to notify message injection is done
      */
     _dispatchMessage: function(event, message) {
-        event.type = "videotag.message.dispatch";
+        event.type = 'videotag.message.dispatch';
         event.metadata.element = message;
         this.options.ucemeeting.trigger(event);
     },
@@ -414,7 +415,7 @@ $.uce.Videotag.prototype = {
     _attachRemove: function(evtype, evid, message) {
         var that = this;
         var originalevent = this.element.data(evid);
-        message.find('.ui-videotag-message-trash').on("click", function() {
+        message.find('.ui-videotag-message-trash').on('click', function() {
                 var md = {
                     parent: evid,
                     parentfrom: originalevent.from
@@ -424,12 +425,12 @@ $.uce.Videotag.prototype = {
                     type: evtype
                 },
                 md,
-                function(err, data, xhr){
-                    if(err) {
-                        if(err==401) {    
+                function(err, data, xhr) {
+                    if (err) {
+                        if (err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': 'internal.user.disconnected',
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -440,7 +441,7 @@ $.uce.Videotag.prototype = {
                                 name: that.options.uceclient.name
                             };
                             that.options.ucemeeting.trigger({
-                                'type': "notify."+evtype+".error", 
+                                'type': 'notify.'+evtype+'.error',
                                 'metadata': md
                             });
                         }
@@ -448,7 +449,7 @@ $.uce.Videotag.prototype = {
                         // decrement hashtag selectors
                         that._pushHashtagDelete(originalevent);
                         that.options.ucemeeting.trigger({
-                            'type': "notify."+evtype, 
+                            'type': 'notify.'+evtype,
                             'metadata': md
                         });
                     }
@@ -461,24 +462,24 @@ $.uce.Videotag.prototype = {
      */
     _attachVote: function(evid, message) {
         var that = this;
-        message.find('.ui-videotag-message-vote').on("click", function() {
+        message.find('.ui-videotag-message-vote').on('click', function() {
             var button = $(this);
-            button.unbind("click");
-            button.parent().addClass("active");
+            button.unbind('click');
+            button.parent().addClass('active');
             var md = {
                 parent: evid
             };
             that.options.ucemeeting.push(
                 {
-                    type: "videotag.message.vote"
+                    type: 'videotag.message.vote'
                 },
                 md,
                 function(err, data, xhr){
-                    if(err) {
-                        if(err==401) {    
+                    if (err) {
+                        if (err==401) {
                             that.options.ucemeeting.trigger({
-                                'type': "internal.user.disconnected", 
-                                'id': Date.now().toString(), 
+                                'type': 'internal.user.disconnected',
+                                'id': Date.now().toString(),
                                 'metadata': { error: err }
                             });
                         } else {
@@ -489,14 +490,14 @@ $.uce.Videotag.prototype = {
                                 name: that.options.uceclient.name
                             };
                             that.options.ucemeeting.trigger({
-                                'type': "notify.videotag.message.vote.error", 
+                                'type': "notify.videotag.message.vote.error",
                                 'metadata': md
                             });
                         }
                     } else {
                         // TODO give a chance to cancel a vote, later
                         that.options.ucemeeting.trigger({
-                            'type': "notify.videotag.message.vote", 
+                            'type': 'notify.videotag.message.vote',
                             'metadata': md
                         });
                     }
@@ -505,9 +506,9 @@ $.uce.Videotag.prototype = {
     },
     _attachPlay: function(message) {
         var that = this;
-        message.find('.ui-videotag-message-date').on("click", function(event) {
-            var seconds = $(this).attr("data-videoseconds");
-            if(seconds && seconds !== "") {
+        message.find('.ui-videotag-message-date').on('click', function(event) {
+            var seconds = $(this).attr('data-videoseconds');
+            if (seconds && seconds !== '') {
                 that.options.player.data('uceplayer').seek(parseInt(seconds, 10));
             }
             event.preventDefault();
@@ -520,7 +521,7 @@ $.uce.Videotag.prototype = {
     clear: function() {
         this.element.empty();
     },
-    
+
     destroy: function() {
         this.element.children('*').remove();
         $.Widget.prototype.destroy.apply(this, arguments); // default destroy
@@ -528,8 +529,8 @@ $.uce.Videotag.prototype = {
 
 };
 
-if($.uce.widget!==undefined) {
-    $.uce.widget("videotag", new $.uce.Videotag());
+if($.uce.widget !== undefined) {
+    $.uce.widget('videotag', new $.uce.Videotag());
 }
 
 })($);
